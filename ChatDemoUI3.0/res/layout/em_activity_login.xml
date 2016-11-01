@@ -25,7 +25,7 @@
             android:src="@drawable/em_icon_account" />
 
         <EditText
-            android:id="@+id/username"
+            android:id="@+id/login_username"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
@@ -58,7 +58,7 @@
             android:src="@drawable/em_icon_pwd" />
 
         <EditText
-            android:id="@+id/password"
+            android:id="@+id/login_password"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
@@ -71,7 +71,7 @@
 
 
     <Button
-        android:id="@+id/login"
+        android:id="@+id/btn_login"
         android:layout_below="@id/rl_password"
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -92,7 +92,7 @@
         android:textColor="@color/blue"
         android:gravity="end"
         android:layout_marginRight="10dp"
-        android:layout_below="@id/login"/>
+        android:layout_below="@id/btn_login"/>
 
     <Button
         android:layout_width="wrap_content"
