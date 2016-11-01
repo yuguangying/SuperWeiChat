@@ -14,6 +14,7 @@
 package cn.ucai.superwechat.ui;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -29,6 +30,7 @@ import com.hyphenate.exceptions.HyphenateException;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.bean.Resultbean;
@@ -129,6 +131,7 @@ public class RegisterActivity extends BaseActivity {
                             SuperWeChatHelper.getInstance().setCurrentUserName(username);
                             Toast.makeText(getApplicationContext(), getResources().getString(R.string.Registered_successfully), Toast.LENGTH_SHORT).show();
                             pd.dismiss();
+                            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                             finish();
                         }
                     });
@@ -164,7 +167,11 @@ public class RegisterActivity extends BaseActivity {
             public void onSuccess(Resultbean result) {
                 if (result.isRetMsg()){
                     registeEMService();
-                }else {
+                }else if(result.getRetCode() == I.MSG_REGISTER_USERNAME_EXISTS){
+                    CommonUtils.showLongToast("账号已经存在");
+                    L.i("账号已经存在");
+                    pd.dismiss();
+                }else if (result.getRetCode() == I.MSG_REGISTER_FAIL){
                     CommonUtils.showLongToast("註冊失敗");
                     L.i("註冊失敗");
                     pd.dismiss();
@@ -186,6 +193,8 @@ public class RegisterActivity extends BaseActivity {
             public void onSuccess(Resultbean result) {
                 if (result.isRetMsg()){
                     L.i("删除数据成功");
+                }else if (result.getRetCode() == I.MSG_UNREGISTER_FAIL){
+                    L.i("解除注册失败");
                 }else {
                     L.i("數據異常");
                 }
