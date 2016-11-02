@@ -161,7 +161,6 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onSuccess(Resultbean result) {
                 if (result.isRetMsg()) {
-
                     String json = result.getRetData().toString();
                     Gson gson = new Gson();
                     userAvatar = gson.fromJson(json, UserAvatar.class);
@@ -179,7 +178,7 @@ public class LoginActivity extends BaseActivity {
                     pd.dismiss();
                 } else {
                     CommonUtils.showLongToast("登录成功");
-                    L.i("登錄失敗");
+                    L.i("登陆失败");
                     pd.dismiss();
                 }
             }
@@ -213,23 +212,23 @@ public class LoginActivity extends BaseActivity {
                 if (!updatenick) {
                     Log.e("LoginActivity", "update current user nick fail");
                 }
-
                 if (!LoginActivity.this.isFinishing() && pd.isShowing()) {
                     pd.dismiss();
                 }
                 // get user's info (this should be get from App's server or 3rd party service)
                 SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetCurrentUserInfo();
 
-                CommonUtils.showLongToast("登錄成功");
+                //CommonUtils.showLongToast("登陆成功");
                 //将用户信息保存到内存
                 SuperWeChatHelper.getInstance().setUserAvatar(userAvatar);
                 //将用户信息保存到手机数据库
                 UserDao ud = new UserDao(context);
                 ud.saveUser(userAvatar);
-                
+
                 Intent intent = new Intent(LoginActivity.this,
                         MainActivity.class);
                 startActivity(intent);
+
                 finish();
             }
 
@@ -255,6 +254,11 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        pd.dismiss();
+    }
 
     /**
      * register

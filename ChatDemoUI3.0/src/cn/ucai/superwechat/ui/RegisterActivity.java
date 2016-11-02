@@ -180,8 +180,8 @@ public class RegisterActivity extends BaseActivity {
                     L.i("账号已经存在");
                     pd.dismiss();
                 } else if (result.getRetCode() == I.MSG_REGISTER_FAIL) {
-                    CommonUtils.showLongToast("註冊失敗");
-                    L.i("註冊失敗");
+                    CommonUtils.showLongToast("注册失败");
+                    L.i("注册失败");
                     pd.dismiss();
                 }
             }
@@ -205,7 +205,7 @@ public class RegisterActivity extends BaseActivity {
                 } else if (result.getRetCode() == I.MSG_UNREGISTER_FAIL) {
                     L.i("解除注册失败");
                 } else {
-                    L.i("數據異常");
+                    L.i("数据异常");
                 }
                 pd.dismiss();
             }
