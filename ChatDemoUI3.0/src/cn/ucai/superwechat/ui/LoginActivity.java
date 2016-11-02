@@ -30,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.domain.UserAvatar;
@@ -44,6 +45,7 @@ import cn.ucai.superwechat.SuperWeChatApplication;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.bean.Resultbean;
 import cn.ucai.superwechat.db.SuperWeChatDBManager;
+import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.net.Dao;
 import cn.ucai.superwechat.utils.CommonUtils;
 import cn.ucai.superwechat.utils.L;
@@ -72,6 +74,7 @@ public class LoginActivity extends BaseActivity {
     ProgressDialog pd = null;
     String currentUsername;
     String currentPassword;
+    UserAvatar userAvatar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,14 +156,19 @@ public class LoginActivity extends BaseActivity {
 
         // reset current user name before login
         SuperWeChatHelper.getInstance().setCurrentUserName(currentUsername);
+        //本地服务器注册
         Dao.login(context, currentUsername, currentPassword, new OkHttpUtils.OnCompleteListener<Resultbean>() {
             @Override
             public void onSuccess(Resultbean result) {
                 if (result.isRetMsg()) {
-                    UserAvatar userAvatar = (UserAvatar) result.getRetData();
+
+                    String json = result.getRetData().toString();
+                    Gson gson = new Gson();
+                    userAvatar = gson.fromJson(json, UserAvatar.class);
+                    L.i(TAG,"userAvatar"+userAvatar.toString());
+                    //环信注册
                     loginEM(currentUsername, currentPassword, pd);
-                    //保存到内存
-                    SuperWeChatHelper.getInstance().setUserAvatar(userAvatar);
+
                 } else if (result.getRetCode() == I.MSG_LOGIN_UNKNOW_USER) {
                     CommonUtils.showLongToast("账户不存在");
                     L.i("账户不存在");
@@ -213,6 +221,12 @@ public class LoginActivity extends BaseActivity {
                 SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetCurrentUserInfo();
 
                 CommonUtils.showLongToast("登錄成功");
+                //将用户信息保存到内存
+                SuperWeChatHelper.getInstance().setUserAvatar(userAvatar);
+                //将用户信息保存到手机数据库
+                UserDao ud = new UserDao(context);
+                ud.saveUser(userAvatar);
+                
                 Intent intent = new Intent(LoginActivity.this,
                         MainActivity.class);
                 startActivity(intent);
