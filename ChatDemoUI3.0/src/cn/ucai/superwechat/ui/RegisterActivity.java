@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.hyphenate.EMError;
@@ -41,7 +42,6 @@ import cn.ucai.superwechat.utils.OkHttpUtils;
 
 /**
  * register screen
- *
  */
 public class RegisterActivity extends BaseActivity {
     @InjectView(R.id.iv_username)
@@ -63,17 +63,25 @@ public class RegisterActivity extends BaseActivity {
     @InjectView(R.id.btn_register)
     Button btnRegister;
 
-     String username ;
-     String usernick ;
-     String pwd ;
-     ProgressDialog pd = null;
+    String username;
+    String usernick;
+    String pwd;
+    ProgressDialog pd = null;
     RegisterActivity context;
+    @InjectView(R.id.title_back)
+    ImageView titleBack;
+//    @InjectView(R.id.title_rl)
+//    RelativeLayout titleRl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.em_activity_register);
         ButterKnife.inject(this);
         context = this;
+//        titleRl.setVisibility(View.VISIBLE);
+        titleBack.setVisibility(View.VISIBLE);
+
     }
 
     public void register() {
@@ -85,15 +93,15 @@ public class RegisterActivity extends BaseActivity {
             Toast.makeText(this, getResources().getString(R.string.User_name_cannot_be_empty), Toast.LENGTH_SHORT).show();
             musername.requestFocus();
             return;
-        } else if (username.matches("^[a-zA-Z]\\w{5,15}]$")){
+        } else if (username.matches("^[a-zA-Z]\\w{5,15}]$")) {
             Toast.makeText(RegisterActivity.this, "用户名格式不对，首字母，6-16位", Toast.LENGTH_SHORT).show();
             musername.requestFocus();
             return;
-        }else if (TextUtils.isEmpty(usernick)) {
+        } else if (TextUtils.isEmpty(usernick)) {
             Toast.makeText(this, getResources().getString(R.string.Password_cannot_be_empty), Toast.LENGTH_SHORT).show();
             mpassword.requestFocus();
             return;
-        }else if (TextUtils.isEmpty(pwd)) {
+        } else if (TextUtils.isEmpty(pwd)) {
             Toast.makeText(this, getResources().getString(R.string.Password_cannot_be_empty), Toast.LENGTH_SHORT).show();
             mpassword.requestFocus();
             return;
@@ -165,18 +173,19 @@ public class RegisterActivity extends BaseActivity {
         Dao.register(context, username, usernick, pwd, new OkHttpUtils.OnCompleteListener<Resultbean>() {
             @Override
             public void onSuccess(Resultbean result) {
-                if (result.isRetMsg()){
+                if (result.isRetMsg()) {
                     registeEMService();
-                }else if(result.getRetCode() == I.MSG_REGISTER_USERNAME_EXISTS){
+                } else if (result.getRetCode() == I.MSG_REGISTER_USERNAME_EXISTS) {
                     CommonUtils.showLongToast("账号已经存在");
                     L.i("账号已经存在");
                     pd.dismiss();
-                }else if (result.getRetCode() == I.MSG_REGISTER_FAIL){
+                } else if (result.getRetCode() == I.MSG_REGISTER_FAIL) {
                     CommonUtils.showLongToast("註冊失敗");
                     L.i("註冊失敗");
                     pd.dismiss();
                 }
             }
+
             @Override
             public void onError(String error) {
                 unregisterAppService();
@@ -191,11 +200,11 @@ public class RegisterActivity extends BaseActivity {
         Dao.unregister(context, username, new OkHttpUtils.OnCompleteListener<Resultbean>() {
             @Override
             public void onSuccess(Resultbean result) {
-                if (result.isRetMsg()){
+                if (result.isRetMsg()) {
                     L.i("删除数据成功");
-                }else if (result.getRetCode() == I.MSG_UNREGISTER_FAIL){
+                } else if (result.getRetCode() == I.MSG_UNREGISTER_FAIL) {
                     L.i("解除注册失败");
-                }else {
+                } else {
                     L.i("數據異常");
                 }
                 pd.dismiss();
@@ -216,8 +225,17 @@ public class RegisterActivity extends BaseActivity {
         finish();
     }
 
-    @OnClick(R.id.btn_register)
-    public void onClick() {
-        register();
+    @OnClick({R.id.btn_register,R.id.title_back})
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btn_register:
+                register();
+                break;
+            case R.id.title_back:
+                finish();
+                break;
+        }
     }
+
+
 }

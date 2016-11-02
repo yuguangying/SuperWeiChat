@@ -27,4 +27,12 @@ public class Dao {
                 .targetClass(Resultbean.class)
                 .execute(listener);
     }
+    public static void login(Context context, String name ,String password, OkHttpUtils.OnCompleteListener<Resultbean> listener){
+        OkHttpUtils<Resultbean> utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_LOGIN)
+                .addParam(I.User.USER_NAME,name)
+                .addParam(I.User.PASSWORD,password)
+                .targetClass(Resultbean.class)
+                .execute(listener);
+    }
 }

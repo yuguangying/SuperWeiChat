@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#eff2f6"
+    android:orientation="vertical"
     >
 
+<include layout="@layout/title"
+    android:id="@+id/title_login"
+    />
 
     <RelativeLayout
         android:layout_marginTop="10dp"
@@ -42,7 +46,6 @@
         android:id="@+id/rl_password"
         android:layout_width="match_parent"
         android:layout_height="54dp"
-        android:layout_below="@id/rl_username"
         android:layout_marginLeft="28dp"
         android:layout_marginRight="28dp"
         android:layout_marginTop="10dp"
@@ -71,15 +74,14 @@
 
 
     <Button
+        android:layout_marginTop="10dp"
         android:id="@+id/btn_login"
-        android:layout_below="@id/rl_password"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginLeft="10dip"
         android:layout_marginRight="10dip"
         android:background="@drawable/em_show_head_toast_bg"
         android:gravity="center"
-        android:onClick="register"
         android:paddingBottom="7dp"
         android:paddingTop="7dp"
         android:text="登录"
@@ -92,15 +94,15 @@
         android:textColor="@color/blue"
         android:gravity="end"
         android:layout_marginRight="10dp"
-        android:layout_below="@id/btn_login"/>
+        />
 
     <Button
+        android:id="@+id/login_register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:background="@color/white"
         android:gravity="center"
-        android:onClick="login"
         android:paddingBottom="7dp"
         android:paddingTop="7dp"
         android:text="注册"
@@ -110,4 +112,4 @@
         android:textColor="@android:color/darker_gray"
         android:textSize="18sp" />
 
-</RelativeLayout>
+</LinearLayout>
