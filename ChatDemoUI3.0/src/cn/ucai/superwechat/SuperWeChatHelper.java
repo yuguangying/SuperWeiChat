@@ -47,6 +47,7 @@ import com.hyphenate.easeui.controller.EaseUI.EaseUserProfileProvider;
 import com.hyphenate.easeui.domain.EaseEmojicon;
 import com.hyphenate.easeui.domain.EaseEmojiconGroupEntity;
 import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.UserAvatar;
 import com.hyphenate.easeui.model.EaseAtMessageHelper;
 import com.hyphenate.easeui.model.EaseNotifier;
 import com.hyphenate.easeui.model.EaseNotifier.EaseNotificationInfoProvider;
@@ -92,6 +93,8 @@ public class SuperWeChatHelper {
 	private static SuperWeChatHelper instance = null;
 	
 	private SuperWeChatModel demoModel = null;
+
+    private UserAvatar userAvatar = null;
 	
 	/**
      * sync groups status listener
@@ -1241,4 +1244,14 @@ public class SuperWeChatHelper {
         easeUI.popActivity(activity);
     }
 
+    public UserAvatar getUserAvatar() {
+        if (userAvatar==null){
+            userAvatar = new UserAvatar();
+        }
+        return userAvatar;
+    }
+
+    public void setUserAvatar(UserAvatar userAvatar) {
+        this.userAvatar = userAvatar;
+    }
 }

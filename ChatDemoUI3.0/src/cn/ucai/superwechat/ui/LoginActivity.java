@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.easeui.domain.UserAvatar;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 
 import butterknife.ButterKnife;
@@ -156,7 +157,10 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onSuccess(Resultbean result) {
                 if (result.isRetMsg()) {
+                    UserAvatar userAvatar = (UserAvatar) result.getRetData();
                     loginEM(currentUsername, currentPassword, pd);
+                    //保存到内存
+                    SuperWeChatHelper.getInstance().setUserAvatar(userAvatar);
                 } else if (result.getRetCode() == I.MSG_LOGIN_UNKNOW_USER) {
                     CommonUtils.showLongToast("账户不存在");
                     L.i("账户不存在");
