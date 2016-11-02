@@ -176,7 +176,7 @@ public class GroupSearchMessageActivity extends BaseActivity implements OnClickL
             }
             
             EMMessage message = getItem(position);
-            EaseUserUtils.setUserNick(message.getFrom(), holder.name);
+            EaseUserUtils.setUserNick(message.getFrom(), holder.name,getContext());
             EaseUserUtils.setUserAvatar(getContext(), message.getFrom(), holder.avatar);
             holder.time.setText(DateUtils.getTimestampString(new Date(message.getMsgTime())));
             holder.message.setText(((EMTextMessageBody)message.getBody()).getMessage());

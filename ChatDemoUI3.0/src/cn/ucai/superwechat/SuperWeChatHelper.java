@@ -33,6 +33,7 @@ import cn.ucai.superwechat.domain.EmojiconExampleGroupData;
 import cn.ucai.superwechat.domain.InviteMessage;
 import cn.ucai.superwechat.domain.InviteMessage.InviteMesageStatus;
 import cn.ucai.superwechat.domain.RobotUser;
+import cn.ucai.superwechat.net.Dao;
 import cn.ucai.superwechat.parse.UserProfileManager;
 import cn.ucai.superwechat.receiver.CallReceiver;
 import cn.ucai.superwechat.ui.ChatActivity;
@@ -210,6 +211,11 @@ public class SuperWeChatHelper {
         return options;
     }
 
+    private UserAvatar getUserAvatar(String username ,Context context){
+        UserDao ud = new UserDao(context);
+        UserAvatar user = ud.getUser(username);
+        return user;
+    }
     protected void setEaseUIProviders() {
     	// set profile provider if you want easeUI to handle avatar and nickname
         easeUI.setUserProfileProvider(new EaseUserProfileProvider() {
@@ -218,7 +224,13 @@ public class SuperWeChatHelper {
             public EaseUser getUser(String username) {
                 return getUserInfo(username);
             }
+
+            @Override
+            public UserAvatar getWeUser(String username,Context context) {
+                return getUserAvatar(username,context);
+            }
         });
+
 
         //set options 
         easeUI.setSettingsProvider(new EaseSettingsProvider() {
@@ -357,6 +369,9 @@ public class SuperWeChatHelper {
             }
         });
     }
+
+
+
 
     EMConnectionListener connectionListener;
     /**

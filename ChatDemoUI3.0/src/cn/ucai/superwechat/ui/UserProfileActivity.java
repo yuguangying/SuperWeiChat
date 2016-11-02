@@ -13,6 +13,7 @@ import com.hyphenate.easeui.utils.EaseUserUtils;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -41,13 +42,15 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 	private TextView tvUsername;
 	private ProgressDialog dialog;
 	private RelativeLayout rlNickName;
-	
+
+	Context context;
 	
 	
 	@Override
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
 		setContentView(R.layout.em_activity_user_profile);
+		context = this;
 		initView();
 		initListener();
 	}
@@ -77,11 +80,11 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 		if(username != null){
     		if (username.equals(EMClient.getInstance().getCurrentUser())) {
     			tvUsername.setText(EMClient.getInstance().getCurrentUser());
-    			EaseUserUtils.setUserNick(username, tvNickName);
+    			EaseUserUtils.setUserNick(username, tvNickName,context);
                 EaseUserUtils.setUserAvatar(this, username, headAvatar);
     		} else {
     			tvUsername.setText(username);
-    			EaseUserUtils.setUserNick(username, tvNickName);
+    			EaseUserUtils.setUserNick(username, tvNickName,context);
     			EaseUserUtils.setUserAvatar(this, username, headAvatar);
     			asyncFetchUserInfo(username);
     		}
