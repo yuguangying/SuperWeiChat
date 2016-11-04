@@ -7,6 +7,9 @@ import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.db.UserDao;
+import cn.ucai.superwechat.net.Dao;
+
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 
@@ -23,6 +26,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -78,16 +82,22 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 			iconRightArrow.setVisibility(View.INVISIBLE);
 		}
 		if(username != null){
-    		if (username.equals(EMClient.getInstance().getCurrentUser())) {
-    			tvUsername.setText(EMClient.getInstance().getCurrentUser());
-    			EaseUserUtils.setUserNick(username, tvNickName,context);
-                EaseUserUtils.setUserAvatar(this, username, headAvatar);
-    		} else {
-    			tvUsername.setText(username);
-    			EaseUserUtils.setUserNick(username, tvNickName,context);
-    			EaseUserUtils.setUserAvatar(this, username, headAvatar);
-    			asyncFetchUserInfo(username);
-    		}
+//    		if (username.equals(EMClient.getInstance().getCurrentUser())) {
+//    			tvUsername.setText(EMClient.getInstance().getCurrentUser());
+//    			EaseUserUtils.setUserNick(username, tvNickName,context);
+//                EaseUserUtils.setUserAvatar(this, username, headAvatar);
+//    		} else {
+//    			tvUsername.setText(username);
+//    			EaseUserUtils.setUserNick(username, tvNickName,context);
+//    			EaseUserUtils.setUserAvatar(this, username, headAvatar);
+//    			asyncFetchUserInfo(username);
+//    		}
+			tvUsername.setText(username);
+			UserDao ud = new UserDao(this);
+			Log.i("main", "initListener: "+ud.getUser(username));
+			tvNickName.setText(ud.getUser(username).getMUserNick());
+			//EaseUserUtils.setAppUserNick(username, tvNickName);
+			EaseUserUtils.setAppUserAvatar(this, username, headAvatar);
 		}
 	}
 

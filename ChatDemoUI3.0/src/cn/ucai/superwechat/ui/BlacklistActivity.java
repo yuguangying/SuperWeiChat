@@ -124,7 +124,7 @@ public class BlacklistActivity extends BaseActivity {
 			ImageView avatar = (ImageView) convertView.findViewById(R.id.avatar);
 			
 			EaseUserUtils.setUserAvatar(getContext(), username, avatar);
-			EaseUserUtils.setUserNick(username, name,getContext());
+			EaseUserUtils.setUserNick(username, name);
 			
 			return convertView;
 		}

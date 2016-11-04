@@ -183,7 +183,7 @@ public final class EaseUI {
     
     /**
      * set user profile provider
-     * @param provider
+     * @param userProvider
      */
     public void setUserProfileProvider(EaseUserProfileProvider userProvider){
         this.userProvider = userProvider;
@@ -247,7 +247,7 @@ public final class EaseUI {
          * @return
          */
         EaseUser getUser(String username);
-        UserAvatar getWeUser(String username,Context context);
+        UserAvatar getAppUser(String username);
     }
     
     /**

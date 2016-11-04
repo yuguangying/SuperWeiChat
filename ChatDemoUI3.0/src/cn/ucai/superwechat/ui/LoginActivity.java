@@ -65,7 +65,7 @@ public class LoginActivity extends BaseActivity {
     Button btnLogin;
     @InjectView(R.id.title_back)
     ImageView titleBack;
-//    @InjectView(R.id.title_rl)
+    //    @InjectView(R.id.title_rl)
 //    RelativeLayout titleRl;
     Context context;
 
@@ -156,7 +156,7 @@ public class LoginActivity extends BaseActivity {
 
         // reset current user name before login
         SuperWeChatHelper.getInstance().setCurrentUserName(currentUsername);
-        //本地服务器注册
+        //本地服务登陆
         Dao.login(context, currentUsername, currentPassword, new OkHttpUtils.OnCompleteListener<Resultbean>() {
             @Override
             public void onSuccess(Resultbean result) {
@@ -164,7 +164,7 @@ public class LoginActivity extends BaseActivity {
                     String json = result.getRetData().toString();
                     Gson gson = new Gson();
                     userAvatar = gson.fromJson(json, UserAvatar.class);
-                    L.i(TAG,"userAvatar"+userAvatar.toString());
+                    L.i(TAG, "userAvatar" + userAvatar.toString());
                     //环信注册
                     loginEM(currentUsername, currentPassword, pd);
 
@@ -196,9 +196,8 @@ public class LoginActivity extends BaseActivity {
     private void loginEM(String currentUsername, String currentPassword, final ProgressDialog pd) {
         final long start = System.currentTimeMillis();
         // call login method
-        Log.d(TAG, "EMClient.getInstance().login");
-        EMClient.getInstance().login(currentUsername, currentPassword, new EMCallBack() {
 
+        EMClient.getInstance().login(currentUsername, currentPassword, new EMCallBack() {
             @Override
             public void onSuccess() {
                 Log.d(TAG, "login: onSuccess");
@@ -257,7 +256,8 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        pd.dismiss();
+        if (pd != null)
+            pd.dismiss();
     }
 
     /**
@@ -274,6 +274,9 @@ public class LoginActivity extends BaseActivity {
         super.onResume();
         if (autoLogin) {
             return;
+        }
+        if (SuperWeChatHelper.getInstance().getCurrentUsernName() != null) {
+            loginUsername.setText(SuperWeChatHelper.getInstance().getCurrentUsernName());
         }
     }
 
