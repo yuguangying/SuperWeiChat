@@ -28,6 +28,8 @@ import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -56,13 +58,16 @@ import butterknife.InjectView;
 import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
+import cn.ucai.superwechat.adapter.MainTabAdpter;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.runtimepermissions.PermissionsManager;
 import cn.ucai.superwechat.runtimepermissions.PermissionsResultAction;
+import cn.ucai.superwechat.widget.DMTabHost;
+import cn.ucai.superwechat.widget.MFViewPager;
 
 @SuppressLint("NewApi")
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedChangeListener,ViewPager.OnPageChangeListener{
 
     //	protected static final String TAG = "MainActivity";
 //	// textview for unread message count
@@ -77,12 +82,12 @@ public class MainActivity extends BaseActivity {
 //	private int currentTabIndex;
     // user logged into another device
     public boolean isConflict = false;
-    @InjectView(R.id.title_wei_xin)
-    TextView titleWeiXin;
-    @InjectView(R.id.title_add)
-    ImageView titleAdd;
+    MFViewPager mainMFVP;
+    DMTabHost mainDMTH;
+    ImageView mainadd;
     // user account was removed
     private boolean isCurrentAccountRemoved = false;
+    MainTabAdpter mainTabAdpter;
 
 
     /**
@@ -98,8 +103,8 @@ public class MainActivity extends BaseActivity {
         savePower();
         checkLogined(savedInstanceState);
         setContentView(R.layout.em_activity_main);
-        titleAdd.setVisibility(View.VISIBLE);
-        titleWeiXin.setVisibility(View.VISIBLE);
+//        titleAdd.setVisibility(View.VISIBLE);
+//        titleWeiXin.setVisibility(View.VISIBLE);
         ButterKnife.inject(this);
         // runtime permission for android 6.0, just require all permissions here for simple
         requestPermissions();
@@ -196,6 +201,21 @@ public class MainActivity extends BaseActivity {
 //		mTabs[2] = (Button) findViewById(R.id.btn_setting);
 //		// select first tab
 //		mTabs[0].setSelected(true);
+        mainDMTH = (DMTabHost) findViewById(R.id.main_DMTH);
+        mainMFVP = (MFViewPager) findViewById(R.id.main_MFVP);
+        mainadd = (ImageView) findViewById(R.id.main_add);
+        mainTabAdpter = new MainTabAdpter(getSupportFragmentManager());
+        mainMFVP.setAdapter(mainTabAdpter);
+        mainMFVP.setOffscreenPageLimit(4);
+        mainTabAdpter.clear();
+        mainTabAdpter.addFragment(new ConversationListFragment(),getString(R.string.app_name));
+        mainTabAdpter.addFragment(new ContactListFragment(),getString(R.string.contacts));
+        mainTabAdpter.addFragment(new DisoverFragment(),getString(R.string.discover));
+        mainTabAdpter.addFragment(new SettingsFragment(),getString(R.string.me));
+        mainTabAdpter.notifyDataSetChanged();
+        mainDMTH.setChecked(0);
+        mainDMTH.setOnCheckedChangeListener(this);
+        mainMFVP.setOnPageChangeListener(this);
     }
 
     /**
@@ -326,6 +346,29 @@ public class MainActivity extends BaseActivity {
         };
         broadcastManager.registerReceiver(broadcastReceiver, intentFilter);
     }
+
+    @Override
+    public void onCheckedChange(int checkedPosition, boolean byUser) {
+        mainMFVP.setCurrentItem(checkedPosition,false);
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        mainMFVP.setCurrentItem(position);
+        mainDMTH.setChecked(position);
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
 
     public class MyContactListener implements EMContactListener {
         @Override

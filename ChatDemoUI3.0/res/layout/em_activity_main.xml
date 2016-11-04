@@ -6,23 +6,39 @@
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray">
+    >
 
-   <include android:id="@+id/main_title" layout="@layout/title"/>
-    <cn.ucai.superwechat.widget.MFViewPager
-        android:id="@+id/main_MFVP"
-        android:layout_below="@id/main_title"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+   <RelativeLayout android:id="@+id/main_title"
+       android:layout_width="match_parent"
+       android:layout_height="50dp"
+       android:background="@color/black"
+       android:padding="5dp"
+       >
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="match_parent"
+           android:text="微信"
+           android:textColor="@color/white"
+           android:gravity="center_vertical"
+           android:textSize="30sp"/>
+       <ImageView
+           android:id="@+id/main_add"
+           android:layout_width="wrap_content"
+           android:layout_height="match_parent"
+           android:src="@drawable/icon_add"
+           android:layout_alignParentRight="true"/>
+   </RelativeLayout>
 
-    </cn.ucai.superwechat.widget.MFViewPager>
+
     <LinearLayout
+        android:id="@+id/bottom_cai"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:background="@color/white"
         android:layout_height="50dp">
         <cn.ucai.superwechat.widget.DMTabHost
+            android:id="@+id/main_DMTH"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             >
@@ -65,4 +81,17 @@
         </cn.ucai.superwechat.widget.DMTabHost>
 
     </LinearLayout>
+    <cn.ucai.superwechat.widget.MFViewPager
+        android:id="@+id/main_MFVP"
+        android:layout_above="@id/bottom_cai"
+        android:layout_below="@id/main_title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </cn.ucai.superwechat.widget.MFViewPager>
+    <View
+        android:layout_above="@id/bottom_cai"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/gray"/>
 </RelativeLayout>
