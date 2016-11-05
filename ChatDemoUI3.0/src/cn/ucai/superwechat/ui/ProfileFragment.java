@@ -1,6 +1,7 @@
 package cn.ucai.superwechat.ui;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,7 +14,6 @@ import com.easemob.redpacketui.utils.RedPacketUtil;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.R;
@@ -24,11 +24,8 @@ import cn.ucai.superwechat.R;
 public class ProfileFragment extends Fragment {
 
 
-    @InjectView(R.id.profile_avatar)
     ImageView profileAvatar;
-    @InjectView(R.id.profile_nick)
     TextView profileNick;
-    @InjectView(R.id.profile_weixin)
     TextView profileWeixin;
 
     public ProfileFragment() {
@@ -39,8 +36,16 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        initView(view);
         ButterKnife.inject(this, view);
         return view;
+    }
+
+    private void initView(View view) {
+        profileAvatar = (ImageView) view.findViewById(R.id.profile_avatar);
+        profileNick = (TextView) view.findViewById(R.id.profile_nick);
+        profileWeixin = (TextView) view.findViewById(R.id.profile_weixin);
+
     }
 
     @Override
@@ -52,7 +57,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setUserInfo() {
-        EaseUserUtils.setAppCurrentUserAvatar(getContext(),profileAvatar);
+        EaseUserUtils.setAppCurrentUserAvatar(getContext(), profileAvatar);
         EaseUserUtils.setAppCurrentUserNick(profileNick);
         EaseUserUtils.setAppCurrentUserNameWithNo(profileWeixin);
     }
@@ -74,16 +79,20 @@ public class ProfileFragment extends Fragment {
                 break;
             //end of red packet code
             case R.id.profile_setting:
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
                 break;
         }
     }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(((MainActivity)getActivity()).isConflict){
+        if (((MainActivity) getActivity()).isConflict) {
             outState.putBoolean("isConflict", true);
-        }else if(((MainActivity)getActivity()).getCurrentAccountRemoved()){
+        } else if (((MainActivity) getActivity()).getCurrentAccountRemoved()) {
             outState.putBoolean(Constant.ACCOUNT_REMOVED, true);
         }
     }
+
+
 }

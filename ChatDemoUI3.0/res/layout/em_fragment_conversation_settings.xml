@@ -5,11 +5,28 @@
     android:background="@color/common_bg"
     android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.hyphenate.easeui.widget.EaseTitleBar
+    <RelativeLayout android:id="@+id/main_title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:titleBarTitle="@string/set"
-        />
+        android:layout_height="50dp"
+        android:background="@color/black"
+        android:padding="5dp"
+        >
+        <ImageView
+            android:id="@+id/she_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/icon_back"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="微信"
+            android:textColor="@color/white"
+            android:gravity="center_vertical"
+            android:textSize="30sp"
+            android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"

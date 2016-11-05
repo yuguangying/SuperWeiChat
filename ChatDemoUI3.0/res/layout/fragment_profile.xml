@@ -16,18 +16,18 @@
             android:orientation="vertical">
             <RelativeLayout
                 android:layout_marginTop="5dp"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="50dp">
                 <ImageView
                     android:id="@+id/profile_avatar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:src="@drawable/default_avatar"/>
                 <TextView
                     android:layout_toRightOf="@id/profile_avatar"
                     android:id="@+id/profile_nick"
                     android:text="鳄鱼"
-                    android:textSize="20sp"
+                    android:textSize="15sp"
                     android:layout_width="wrap_content"
                     android:layout_height="25dp"
                     />
@@ -37,7 +37,7 @@
                     android:layout_toRightOf="@id/profile_avatar"
                     android:id="@+id/profile_weixin"
                     android:text="鳄鱼"
-                    android:textSize="20sp"
+                    android:textSize="15sp"
                     android:layout_width="wrap_content"
                     android:layout_height="25dp"
                     />
