@@ -36,8 +36,8 @@ public class EaseUserUtils {
     }
 
     public static UserAvatar getAppUserInfo(String username) {
-        Log.i("main", "getAppUserInfo: "+username);
         if (userProvider != null) {
+            Log.i("main", "getAppUserInfo: "+userProvider.getAppUser(username));
             return userProvider.getAppUser(username);
         }
         return null;
@@ -84,6 +84,7 @@ public class EaseUserUtils {
      */
     public static void setAppUserAvatar(Context context, String username, ImageView imageView) {
         UserAvatar user = getAppUserInfo(username);
+        Log.i("result", "setAppUserAvatar: "+user);
         if (user != null && user.getAvatar() != null) {
             try {
                 int avatarResId = Integer.parseInt(user.getAvatar());

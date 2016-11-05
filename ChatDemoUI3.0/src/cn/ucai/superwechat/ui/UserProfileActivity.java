@@ -1,6 +1,11 @@
 package cn.ucai.superwechat.ui;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -17,6 +22,7 @@ import cn.ucai.superwechat.utils.OkHttpUtils;
 
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.domain.UserAvatar;
+import com.hyphenate.easeui.utils.EaseImageUtils;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 
 import android.app.AlertDialog;
@@ -290,13 +296,46 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                 break;
             case REQUESTCODE_CUTTING:
                 if (data != null) {
-                    setPicToView(data);
+                    updateAvatar(data);
+                    //setPicToView(data);
                 }
                 break;
             default:
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void updateAvatar(final Intent data) {
+        dialog = ProgressDialog.show(this, getString(R.string.dl_update_photo), getString(R.string.dl_waiting));
+        dialog.show();
+        File file = savebitmapFile(data);
+        Dao.updateAvatar(context, user.getMUserName(), file, new OkHttpUtils.OnCompleteListener<Resultbean>() {
+            @Override
+            public void onSuccess(Resultbean result) {
+                Log.i("result", "onSuccess: "+result);
+                if (result.isRetMsg()){
+                    setPicToView(data);
+                    String json = result.getRetData().toString();
+                    Gson gson = new Gson();
+                    UserAvatar userAvatar = gson.fromJson(json, UserAvatar.class);
+                    user = userAvatar;
+                    SuperWeChatHelper.getInstance().saveAppContact(userAvatar);
+                    EaseUserUtils.setAppCurrentUserAvatar(context,headAvatar);
+                    CommonUtils.showLongToast("updateAvatarSuccess");
+                }else {
+                    dialog.dismiss();
+                    Log.i("main", "onSuccess: updateAvatar fail");
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                dialog.dismiss();
+                Log.i("main", "onError: "+error);
+                CommonUtils.showLongToast(error);
+            }
+        });
     }
 
     public void startPhotoZoom(Uri uri) {
@@ -329,7 +368,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
     }
 
     private void uploadUserAvatar(final byte[] data) {
-        dialog = ProgressDialog.show(this, getString(R.string.dl_update_photo), getString(R.string.dl_waiting));
+
         new Thread(new Runnable() {
 
             @Override
@@ -353,7 +392,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
             }
         }).start();
 
-        dialog.show();
+
     }
 
 
@@ -361,5 +400,24 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
         return baos.toByteArray();
+    }
+    public File savebitmapFile(Intent picdata){
+        Bundle extras = picdata.getExtras();
+        if (extras != null){
+            Bitmap bitmap = extras.getParcelable("data");
+            String imagePath = EaseImageUtils.getImagePath(user.getMUserName()+".jpg");
+            File file = new File(imagePath);//图片保存路径
+            try {
+                BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+                bitmap.compress(Bitmap.CompressFormat.PNG,100,bos);
+                bos.flush();
+                bos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return file;
+
+        }
+        return null;
     }
 }
