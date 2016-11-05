@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.R;
 import com.hyphenate.easeui.controller.EaseUI;
 import com.hyphenate.easeui.controller.EaseUI.EaseUserProfileProvider;
@@ -111,4 +112,23 @@ public class EaseUserUtils {
         }
     }
 
+    public static void setAppCurrentUserAvatar(Context context, ImageView profileAvatar) {
+        String name = EMClient.getInstance().getCurrentUser();
+        setAppUserAvatar(context,name,profileAvatar);
+    }
+
+    public static void setAppCurrentUserNick( TextView textView) {
+        String name = EMClient.getInstance().getCurrentUser();
+        setAppUserNick(name,textView);
+    }
+
+
+    public static void setAppCurrentUserNameWithNo(TextView textView) {
+        String name = EMClient.getInstance().getCurrentUser();
+        setAppUserNameWithNo(name,textView);
+    }
+
+    private static void setAppUserNameWithNo(String name, TextView textView) {
+        textView.setText("微信号："+name);
+    }
 }
