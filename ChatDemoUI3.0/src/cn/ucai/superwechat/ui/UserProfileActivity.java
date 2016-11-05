@@ -3,16 +3,20 @@ package cn.ucai.superwechat.ui;
 import java.io.ByteArrayOutputStream;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.bean.Resultbean;
 import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.net.Dao;
 import cn.ucai.superwechat.utils.CommonUtils;
+import cn.ucai.superwechat.utils.OkHttpUtils;
 
 import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.UserAvatar;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 
 import android.app.AlertDialog;
@@ -22,6 +26,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.ImageFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -48,9 +53,11 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
     private TextView tvUsername;
     private ProgressDialog dialog;
     private RelativeLayout rlNickName;
+    private RelativeLayout rlWeiXin;
     ImageView back;
     Context context;
-
+    UserAvatar user;
+    EditText editText;
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -59,6 +66,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         context = this;
         initView();
         initListener();
+        user = EaseUserUtils.getAppUserInfo(EMClient.getInstance().getCurrentUser());
     }
 
     private void initView() {
@@ -68,7 +76,49 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         tvNickName = (TextView) findViewById(R.id.user_nickname);
         rlNickName = (RelativeLayout) findViewById(R.id.rl_nickname);
         iconRightArrow = (ImageView) findViewById(R.id.ic_right_arrow);
+        rlWeiXin = (RelativeLayout) findViewById(R.id.rl_weixin);
         back = (ImageView) findViewById(R.id.she_back);
+        setOnListener();
+        headAvatar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadHeadPhoto();
+            }
+        });
+        rlWeiXin.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CommonUtils.showLongToast("账号不能修改");
+            }
+        });
+    }
+
+    private void setOnListener() {
+        rlNickName.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("main", "onClick: rl_nickname");
+                editText = new EditText(context);
+                editText.setText(user.getMUserNick().trim());
+                new Builder(context).setTitle(R.string.setting_nickname).setIcon(android.R.drawable.ic_dialog_info).setView(editText)
+                        .setPositiveButton(R.string.dl_ok, new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String nickString = editText.getText().toString();
+                                if (TextUtils.isEmpty(nickString)) {
+                                    Toast.makeText(UserProfileActivity.this, getString(R.string.toast_nick_not_isnull), Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                if (nickString.equals(user.getMUserNick())) {
+                                    Toast.makeText(UserProfileActivity.this, "昵称未修改", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                updateRemoteNick(nickString);
+                            }
+                        }).setNegativeButton(R.string.dl_cancel, null).show();
+            }
+        });
     }
 
     private void initListener() {
@@ -80,32 +130,39 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.user_head_avatar:
-                uploadHeadPhoto();
-                break;
+//            case R.id.user_head_avatar:
+//                Log.i("main", "onClick: user_head_avatar");
+//                uploadHeadPhoto();
+//                break;
             case R.id.she_back:
                 finish();
                 break;
-            case R.id.rl_weixin:
-                CommonUtils.showLongToast("账号不能修改");
-                finish();
-                break;
-            case R.id.rl_nickname:
-                final EditText editText = new EditText(this);
-                new AlertDialog.Builder(this).setTitle(R.string.setting_nickname).setIcon(android.R.drawable.ic_dialog_info).setView(editText)
-                        .setPositiveButton(R.string.dl_ok, new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String nickString = editText.getText().toString();
-                                if (TextUtils.isEmpty(nickString)) {
-                                    Toast.makeText(UserProfileActivity.this, getString(R.string.toast_nick_not_isnull), Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-                                updateRemoteNick(nickString);
-                            }
-                        }).setNegativeButton(R.string.dl_cancel, null).show();
-                break;
+//            case R.id.rl_weixin:
+//                Log.i("main", "onClick: rl_weixin");
+//                CommonUtils.showLongToast("账号不能修改");
+//                break;
+//            case R.id.rl_nickname:
+//                Log.i("main", "onClick: rl_nickname");
+//                editText = new EditText(this);
+//                editText.setText(user.getMUserNick().trim());
+//                new AlertDialog.Builder(this).setTitle(R.string.setting_nickname).setIcon(android.R.drawable.ic_dialog_info).setView(editText)
+//                        .setPositiveButton(R.string.dl_ok, new DialogInterface.OnClickListener() {
+//
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                String nickString = editText.getText().toString();
+//                                if (TextUtils.isEmpty(nickString)) {
+//                                    Toast.makeText(UserProfileActivity.this, getString(R.string.toast_nick_not_isnull), Toast.LENGTH_SHORT).show();
+//                                    return;
+//                                }
+//                                if (nickString.equals(user.getMUserNick())) {
+//                                    Toast.makeText(UserProfileActivity.this, "昵称未修改", Toast.LENGTH_SHORT).show();
+//                                    return;
+//                                }
+//                                updateRemoteNick(nickString);
+//                            }
+//                        }).setNegativeButton(R.string.dl_cancel, null).show();
+//                break;
             default:
                 break;
         }
@@ -184,6 +241,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                         }
                     });
                 } else {
+                    updataProfileNick(nickName);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -198,7 +256,30 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         }).start();
     }
 
-    @Override
+    private void updataProfileNick(final String nickName) {
+        Dao.updateNick(this, user.getMUserName(), nickName, new OkHttpUtils.OnCompleteListener<Resultbean>() {
+            @Override
+            public void onSuccess(Resultbean result) {
+                if (result.isRetMsg()){
+                    String json = result.getRetData().toString();
+                    Gson gson = new Gson();
+                    UserAvatar userAvatar = gson.fromJson(json, UserAvatar.class);
+                    user = userAvatar;
+                    SuperWeChatHelper.getInstance().saveAppContact(userAvatar);
+                    EaseUserUtils.setAppCurrentUserNick(tvNickName);
+                }else {
+                    Log.i("main", "onSuccess: failnick");
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.i("main", "UserProfileActivity:onError: "+error);
+            }
+        });
+    }
+
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUESTCODE_PICK:

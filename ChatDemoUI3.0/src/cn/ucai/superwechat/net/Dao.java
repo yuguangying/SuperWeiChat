@@ -35,4 +35,12 @@ public class Dao {
                 .targetClass(Resultbean.class)
                 .execute(listener);
     }
+    public static void updateNick(Context context, String name ,String newnick, OkHttpUtils.OnCompleteListener<Resultbean> listener){
+        OkHttpUtils<Resultbean> utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_UPDATE_USER_NICK)
+                .addParam(I.User.USER_NAME,name)
+                .addParam(I.User.NICK,newnick)
+                .targetClass(Resultbean.class)
+                .execute(listener);
+    }
 }
