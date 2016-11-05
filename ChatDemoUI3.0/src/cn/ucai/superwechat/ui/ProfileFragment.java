@@ -68,10 +68,13 @@ public class ProfileFragment extends Fragment {
         ButterKnife.reset(this);
     }
 
-    @OnClick({R.id.profile_phone, R.id.profile_money, R.id.profile_setting})
+    @OnClick({R.id.profile_phone, R.id.profile_money, R.id.profile_setting,R.id.profile})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.profile_phone:
+                break;
+            case R.id.profile:
+                startActivity(new Intent(getActivity(),UserProfileActivity.class));
                 break;
             //red packet code : 进入零钱页面
             case R.id.profile_money:
