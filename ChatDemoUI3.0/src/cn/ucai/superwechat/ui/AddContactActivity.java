@@ -16,6 +16,7 @@ package cn.ucai.superwechat.ui;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,9 +24,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.hyphenate.chat.EMClient;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.bean.Resultbean;
+import cn.ucai.superwechat.db.UserDao;
+import cn.ucai.superwechat.net.Dao;
+import cn.ucai.superwechat.utils.CommonUtils;
+import cn.ucai.superwechat.utils.MGFT;
+import cn.ucai.superwechat.utils.OkHttpUtils;
+
+import com.hyphenate.easeui.domain.UserAvatar;
 import com.hyphenate.easeui.widget.EaseAlertDialog;
 
 public class AddContactActivity extends BaseActivity{
@@ -67,13 +77,27 @@ public class AddContactActivity extends BaseActivity{
 				new EaseAlertDialog(this, R.string.Please_enter_a_username).show();
 				return;
 			}
-			
-			// TODO you can search the user from your app server here.
-			
-			//show the userame and add button if user exist
-			searchedUserLayout.setVisibility(View.VISIBLE);
-			nameText.setText(toAddUsername);
-			
+			Dao.findUser(this, toAddUsername, new OkHttpUtils.OnCompleteListener<Resultbean>() {
+				@Override
+				public void onSuccess(Resultbean result) {
+					if (result.isRetMsg()){
+						String s = result.getRetData().toString().trim();
+						Gson gson = new Gson();
+						UserAvatar userAvatar = gson.fromJson(s, UserAvatar.class);
+						MGFT.gotoFindProfile(AddContactActivity.this,userAvatar);
+					}else {
+						Log.i("AddContact", "false: 未找到");
+						CommonUtils.showLongToast("未找到");
+					}
+				}
+
+				@Override
+				public void onError(String error) {
+					Log.i("AddContact", "onError: "+error);
+					CommonUtils.showLongToast(error);
+				}
+			});
+
 		} 
 	}	
 	

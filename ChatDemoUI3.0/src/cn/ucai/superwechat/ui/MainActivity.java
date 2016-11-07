@@ -32,6 +32,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,12 +47,14 @@ import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMConversation.EMConversationType;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.easeui.domain.UserAvatar;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.util.EMLog;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 
 import java.util.List;
+import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -63,8 +66,11 @@ import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.runtimepermissions.PermissionsManager;
 import cn.ucai.superwechat.runtimepermissions.PermissionsResultAction;
+import cn.ucai.superwechat.utils.MGFT;
 import cn.ucai.superwechat.widget.DMTabHost;
 import cn.ucai.superwechat.widget.MFViewPager;
+import dialog.TitleMenu.ActionItem;
+import dialog.TitleMenu.TitlePopup;
 
 @SuppressLint("NewApi")
 public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedChangeListener,ViewPager.OnPageChangeListener{
@@ -88,6 +94,8 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
     // user account was removed
     private boolean isCurrentAccountRemoved = false;
     MainTabAdpter mainTabAdpter;
+    ImageView add;
+    TitlePopup mtitlePopup;
 
 
     /**
@@ -107,11 +115,13 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
 //        titleWeiXin.setVisibility(View.VISIBLE);
         ButterKnife.inject(this);
         // runtime permission for android 6.0, just require all permissions here for simple
+        Map<String, UserAvatar> appContactList = SuperWeChatHelper.getInstance().getAppContactList();
+        Log.i("list", "onCreate: "+appContactList.toString());
         requestPermissions();
         initView();
         umeng();
         checkAccount();
-
+        listener();
         inviteMessgeDao = new InviteMessgeDao(this);
         UserDao userDao = new UserDao(this);
 //		conversationListFragment = new ConversationListFragment();
@@ -130,6 +140,15 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
         EMClient.getInstance().contactManager().setContactListener(new MyContactListener());
         //debug purpose only
         registerInternalDebugReceiver();
+    }
+
+    private void listener() {
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mtitlePopup.show(findViewById(R.id.main_title));
+            }
+        });
     }
 
     private void checkAccount() {
@@ -216,7 +235,34 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
         mainDMTH.setChecked(0);
         mainDMTH.setOnCheckedChangeListener(this);
         mainMFVP.setOnPageChangeListener(this);
+
+
+        add = (ImageView) findViewById(R.id.main_add);
+        mtitlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        mtitlePopup.addAction(new ActionItem(this,R.string.menu_addfriend,R.drawable.icon_menu_addfriend));
+        mtitlePopup.addAction(new ActionItem(this,R.string.menu_groupchat,R.drawable.icon_menu_group));
+        mtitlePopup.addAction(new ActionItem(this,R.string.menu_money,R.drawable.icon_menu_money));
+        mtitlePopup.addAction(new ActionItem(this,R.string.menu_qrcode,R.drawable.icon_menu_sao));
+        mtitlePopup.setItemOnClickListener(onItemOnClickListener);
     }
+    TitlePopup.OnItemOnClickListener onItemOnClickListener = new TitlePopup.OnItemOnClickListener() {
+        @Override
+        public void onItemClick(ActionItem item, int position) {
+            switch (position){
+                case 0:
+                    MGFT.gotoAddFriend(MainActivity.this);
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+            }
+        }
+    };
+
+
 
     /**
      * on tab clicked
@@ -351,6 +397,7 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
     public void onCheckedChange(int checkedPosition, boolean byUser) {
         mainMFVP.setCurrentItem(checkedPosition,false);
     }
+
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

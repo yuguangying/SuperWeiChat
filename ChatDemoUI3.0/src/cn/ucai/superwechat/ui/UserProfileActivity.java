@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.hyphenate.EMValueCallBack;
@@ -48,13 +49,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class UserProfileActivity extends BaseActivity implements OnClickListener {
+public class UserProfileActivity extends BaseActivity implements OnClickListener{
 
     private static final int REQUESTCODE_PICK = 1;
     private static final int REQUESTCODE_CUTTING = 2;
     private ImageView headAvatar;
     private ImageView headPhotoUpdate;
     private ImageView iconRightArrow;
+
     private TextView tvNickName;
     private TextView tvUsername;
     private ProgressDialog dialog;
@@ -64,6 +66,8 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
     Context context;
     UserAvatar user;
     EditText editText;
+
+
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -129,7 +133,9 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 
     private void initListener() {
         EaseUserUtils.setAppCurrentUserAvatar(this, headAvatar);
-        EaseUserUtils.setAppCurrentUserNick(tvNickName);
+        String mUserNick = SuperWeChatHelper.getInstance().getUserAvatar().getMUserNick();
+        //EaseUserUtils.setAppCurrentUserNick(profileNick);
+        tvNickName.setText(mUserNick);
         EaseUserUtils.setAppCurrentUserNameWithNo(tvUsername);
     }
 
@@ -310,11 +316,12 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         dialog = ProgressDialog.show(this, getString(R.string.dl_update_photo), getString(R.string.dl_waiting));
         dialog.show();
         File file = savebitmapFile(data);
+        Log.i("result", "updateAvatar: "+file.getAbsolutePath());
         Dao.updateAvatar(context, user.getMUserName(), file, new OkHttpUtils.OnCompleteListener<Resultbean>() {
             @Override
             public void onSuccess(Resultbean result) {
-                Log.i("result", "onSuccess: "+result);
                 if (result.isRetMsg()){
+                    Log.i("result", "onSuccess: "+result);
                     setPicToView(data);
                     String json = result.getRetData().toString();
                     Gson gson = new Gson();
@@ -359,12 +366,14 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
     private void setPicToView(Intent picdata) {
         Bundle extras = picdata.getExtras();
         if (extras != null) {
+//            dialog.dismiss();
             Bitmap photo = extras.getParcelable("data");
             Drawable drawable = new BitmapDrawable(getResources(), photo);
             headAvatar.setImageDrawable(drawable);
-            uploadUserAvatar(Bitmap2Bytes(photo));
+//            Toast.makeText(UserProfileActivity.this, getString(R.string.toast_updatephoto_success),
+//                    Toast.LENGTH_SHORT).show();
+//            uploadUserAvatar(Bitmap2Bytes(photo));
         }
-
     }
 
     private void uploadUserAvatar(final byte[] data) {

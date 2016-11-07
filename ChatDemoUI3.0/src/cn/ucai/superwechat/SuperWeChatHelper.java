@@ -34,6 +34,7 @@ import cn.ucai.superwechat.domain.InviteMessage;
 import cn.ucai.superwechat.domain.InviteMessage.InviteMesageStatus;
 import cn.ucai.superwechat.domain.RobotUser;
 import cn.ucai.superwechat.net.Dao;
+import cn.ucai.superwechat.parse.UserAppProfileManager;
 import cn.ucai.superwechat.parse.UserProfileManager;
 import cn.ucai.superwechat.receiver.CallReceiver;
 import cn.ucai.superwechat.ui.ChatActivity;
@@ -92,6 +93,8 @@ public class SuperWeChatHelper {
     private Map<String, RobotUser> robotList;
 
     private UserProfileManager userProManager;
+
+    private UserAppProfileManager userAppProManager;
 
     private static SuperWeChatHelper instance = null;
 
@@ -748,7 +751,6 @@ public class SuperWeChatHelper {
         // You'd better cache it if you get it from your server
         UserAvatar user = null;
         user = getAppContactList().get(username);
-
         // if user is not in your contacts, set inital letter for him/her
         if (user == null) {
             user = new UserAvatar(username);
@@ -970,7 +972,12 @@ public class SuperWeChatHelper {
         }
         return userProManager;
     }
-
+    public UserAppProfileManager getUserAppProfileManager() {
+        if (userAppProManager == null) {
+            userAppProManager = new UserAppProfileManager();
+        }
+        return userAppProManager;
+    }
     void endCall() {
         try {
             EMClient.getInstance().callManager().endCall();

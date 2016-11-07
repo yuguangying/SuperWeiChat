@@ -64,4 +64,11 @@ public class Dao {
                 .targetClass(Resultbean.class)
                 .execute(listener);
     }
+    public static void findUser(Context context, String name , OkHttpUtils.OnCompleteListener<Resultbean> listener){
+        OkHttpUtils<Resultbean> utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_FIND_USER)
+                .addParam(I.User.USER_NAME,name)
+                .targetClass(Resultbean.class)
+                .execute(listener);
+    }
 }

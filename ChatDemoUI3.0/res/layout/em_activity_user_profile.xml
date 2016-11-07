@@ -35,7 +35,16 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             >
-            <ImageView 
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/network"
+                android:layout_width="60dip"
+                android:layout_height="60dip"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="8dip"
+                android:scaleType="centerCrop"
+                />
+            <ImageView
                 android:id="@+id/user_head_avatar"
                 android:layout_width="60dip"
                 android:layout_height="60dip"

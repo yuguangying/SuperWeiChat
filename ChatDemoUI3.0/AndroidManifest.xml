@@ -50,9 +50,9 @@
     <application
         android:name=".SuperWeChatApplication"
         android:allowBackup="true"
-        android:theme="@style/AppTheme"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name">
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
         <activity
             android:name=".ui.MainActivity"
             android:launchMode="singleTask"
@@ -273,7 +273,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide" />
 
-
         <!-- 红包相关Activity start -->
         <!-- 发红包 -->
         <activity
@@ -483,6 +482,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.FindDetailed"></activity>
     </application>
 
 </manifest>

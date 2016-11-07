@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.easeui.controller.EaseUI;
 import com.hyphenate.easeui.domain.UserAvatar;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 
@@ -223,6 +224,7 @@ public class LoginActivity extends BaseActivity {
                 //将用户信息保存到手机数据库
                 UserDao ud = new UserDao(context);
                 ud.saveUser(userAvatar);
+
 
                 Intent intent = new Intent(LoginActivity.this,
                         MainActivity.class);
