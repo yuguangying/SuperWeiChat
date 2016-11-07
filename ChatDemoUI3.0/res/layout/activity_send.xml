@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout android:id="@+id/send_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/black"
+        android:padding="5dp"
+        >
+        <ImageView
+            android:id="@+id/send_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/icon_back"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="微信"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/white"
+            android:gravity="center_vertical"
+            android:textSize="30sp"/>
+        <TextView
+            android:id="@+id/send_tv"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:text="发送"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:background="@color/green"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/send_hint"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="你需要发送验证申请，等待对方同意"
+        android:layout_below="@id/send_title"
+        />
+    <EditText
+        android:id="@+id/send_yan"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@id/send_hint"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:drawableRight="@drawable/rp_closed_icon"
+        />
+    <RelativeLayout
+        android:layout_below="@id/send_yan"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:background="@drawable/em_btn_bottom_selector"
+        android:padding="10dip" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="10dip"
+            android:text="不让他(她)看我的朋友圈"
+            android:textSize="18sp"
+            android:typeface="serif" />
+
+        <com.hyphenate.easeui.widget.EaseSwitchButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/send_notification"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
+</RelativeLayout>

@@ -8,6 +8,7 @@ import com.hyphenate.easeui.domain.UserAvatar;
 import cn.ucai.superwechat.ui.AddContactActivity;
 import cn.ucai.superwechat.ui.FindDetailed;
 import cn.ucai.superwechat.ui.GroupSimpleDetailActivity;
+import cn.ucai.superwechat.ui.SendActivity;
 import cn.ucai.superwechat.ui.UserProfileActivity;
 
 /**
@@ -19,10 +20,18 @@ public class MGFT {
         intent.setClass(context,AddContactActivity.class);
         context.startActivity(intent);
     }
-    public static void gotoFindProfile(Activity context,UserAvatar user){
+    public static void gotoFindProfile(Activity context,UserAvatar user,boolean isContact){
         Intent intent = new Intent();
         intent.setClass(context,FindDetailed.class);
         intent.putExtra("name",user);
+        intent.putExtra("isContact",isContact);
+        context.startActivity(intent);
+    }
+
+    public static void gotoSend(Activity context,UserAvatar user) {
+        Intent intent = new Intent();
+        intent.setClass(context,SendActivity.class);
+        intent.putExtra("send",user);
         context.startActivity(intent);
     }
 }

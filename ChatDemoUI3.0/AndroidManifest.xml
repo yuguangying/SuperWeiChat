@@ -482,7 +482,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.FindDetailed"></activity>
+        <activity android:name=".ui.FindDetailed" />
+        <activity android:name=".ui.SendActivity"></activity>
     </application>
 
 </manifest>

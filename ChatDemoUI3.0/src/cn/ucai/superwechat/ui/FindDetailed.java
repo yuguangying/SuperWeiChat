@@ -1,6 +1,5 @@
 package cn.ucai.superwechat.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -11,12 +10,11 @@ import android.widget.TextView;
 import com.hyphenate.easeui.domain.UserAvatar;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 
-import java.io.Serializable;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.utils.MGFT;
 
 public class FindDetailed extends AppCompatActivity {
 
@@ -28,17 +26,27 @@ public class FindDetailed extends AppCompatActivity {
     TextView findNick;
     @InjectView(R.id.find_add)
     Button findAdd;
-
+    @InjectView(R.id.find_send)
+    Button findSend;
+    @InjectView(R.id.find_video)
+    Button findVideo;
+    UserAvatar user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_detailed);
         ButterKnife.inject(this);
-        UserAvatar user = (UserAvatar) getIntent().getSerializableExtra("name");
+        user = (UserAvatar) getIntent().getSerializableExtra("name");
+        if (getIntent().getBooleanExtra("isContact",false)){
+        }else {
+            findAdd.setVisibility(View.VISIBLE);
+            findSend.setVisibility(View.GONE);
+            findVideo.setVisibility(View.GONE);
+        }
         if (user != null) {
             findName.setText(user.getMUserName());
             findNick.setText(user.getMUserNick());
-            EaseUserUtils.setAppUserAvatar(this,user.getMUserName(), findHeadAvatar);
+            EaseUserUtils.setAppUserAvatar(this, user.getMUserName(), findHeadAvatar);
         }
     }
 
@@ -51,8 +59,10 @@ public class FindDetailed extends AppCompatActivity {
             case R.id.find_more:
                 break;
             case R.id.find_add:
+                MGFT.gotoSend(this,user);
                 break;
             case R.id.find_send:
+
                 break;
             case R.id.find_video:
                 break;

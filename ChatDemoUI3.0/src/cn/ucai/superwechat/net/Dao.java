@@ -71,4 +71,13 @@ public class Dao {
                 .targetClass(Resultbean.class)
                 .execute(listener);
     }
+    //http://101.251.196.90:8000/SuperWeChatServerV2.0/addContact?m_contact_user_name=a&m_contact_cname=f
+    public static void addContact(Context context, String name ,String cname , OkHttpUtils.OnCompleteListener<Resultbean> listener){
+        OkHttpUtils<Resultbean> utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_ADD_CONTACT)
+                .addParam(I.Contact.USER_NAME,name)
+                .addParam(I.Contact.CU_NAME,cname)
+                .targetClass(Resultbean.class)
+                .execute(listener);
+    }
 }
