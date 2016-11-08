@@ -645,6 +645,7 @@ public class SuperWeChatHelper {
                             String json = result.getRetData().toString().trim();
                             Gson gson = new Gson();
                             UserAvatar userAvatar = gson.fromJson(json, UserAvatar.class);
+                            Log.i(TAG, "onSuccess:save "+userAvatar);
                             saveAppContact(userAvatar);
                             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
                             Log.i(TAG, "onSuccess: success");

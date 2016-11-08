@@ -2,6 +2,7 @@ package cn.ucai.superwechat.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,6 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.utils.MGFT;
 
 public class FindDetailed extends AppCompatActivity {
@@ -31,17 +33,18 @@ public class FindDetailed extends AppCompatActivity {
     @InjectView(R.id.find_video)
     Button findVideo;
     UserAvatar user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_detailed);
         ButterKnife.inject(this);
         user = (UserAvatar) getIntent().getSerializableExtra("name");
-        if (getIntent().getBooleanExtra("isContact",false)){
-        }else {
+        if (!SuperWeChatHelper.getInstance().getAppContactList().containsKey(user.getMUserName())) {
             findAdd.setVisibility(View.VISIBLE);
-            findSend.setVisibility(View.GONE);
-            findVideo.setVisibility(View.GONE);
+        } else {
+            findSend.setVisibility(View.VISIBLE);
+            findVideo.setVisibility(View.VISIBLE);
         }
         if (user != null) {
             findName.setText(user.getMUserName());
@@ -59,10 +62,10 @@ public class FindDetailed extends AppCompatActivity {
             case R.id.find_more:
                 break;
             case R.id.find_add:
-                MGFT.gotoSend(this,user);
+                MGFT.gotoSend(this, user);
                 break;
             case R.id.find_send:
-
+                MGFT.gotoChat(this, user.getMUserName());
                 break;
             case R.id.find_video:
                 break;

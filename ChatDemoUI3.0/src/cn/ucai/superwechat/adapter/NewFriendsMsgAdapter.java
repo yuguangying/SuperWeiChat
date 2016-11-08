@@ -162,8 +162,9 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
                     public void onClick(View v) {
 
                         acceptInvitation(holder.agree, holder.status, msg);
-                        holder.agree.setText("已同意");
+                        holder.agree.setVisibility(View.GONE);
                         holder.status.setVisibility(View.GONE);
+                        holder.reason.setText("已同意");
                     }
                 });
                 holder.status.setOnClickListener(new OnClickListener() {

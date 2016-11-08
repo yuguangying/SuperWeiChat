@@ -82,6 +82,7 @@
         android:layout_height="wrap_content"
         android:background="@color/green"
         android:text="发消息"
+        android:visibility="gone"
         android:textSize="20sp"/>
     <Button
         android:layout_below="@id/find_send"
@@ -89,6 +90,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="视频聊天"
+        android:visibility="gone"
         android:textSize="20sp"/>
 
 </RelativeLayout>

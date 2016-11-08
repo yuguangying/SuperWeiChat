@@ -22,8 +22,10 @@ import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.db.UserDao;
+import cn.ucai.superwechat.utils.MGFT;
 import cn.ucai.superwechat.widget.ContactItemView;
 import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.UserAvatar;
 import com.hyphenate.easeui.ui.EaseContactListFragment;
 import com.hyphenate.util.EMLog;
 import com.hyphenate.util.NetUtils;
@@ -31,6 +33,7 @@ import com.hyphenate.util.NetUtils;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -123,7 +126,11 @@ public class ContactListFragment extends EaseContactListFragment {
                 if (user != null) {
                     String username = user.getUsername();
                     // demo中直接进入聊天页面，实际一般是进入用户详情页
-                    startActivity(new Intent(getActivity(), ChatActivity.class).putExtra("userId", username));
+                    Log.i("list", "onItemClick: "+SuperWeChatHelper.getInstance().getAppContactList());
+                    UserAvatar contactUserAvatar = SuperWeChatHelper.getInstance().getAppContactList().get(username);
+                    Log.i("list", "onItemClick: "+contactUserAvatar);
+                    MGFT.gotoFindProfile(getActivity(),contactUserAvatar);
+                    //startActivity(new Intent(getActivity(), ChatActivity.class).putExtra("userId", username));
                 }
             }
         });
