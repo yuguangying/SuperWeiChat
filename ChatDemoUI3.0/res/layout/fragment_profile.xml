@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
     tools:context="cn.ucai.superwechat.ui.ProfileFragment">
 
     <ScrollView
@@ -29,10 +31,12 @@
                     android:id="@+id/profile_nick"
                     android:text="鳄鱼"
                     android:textSize="15sp"
+                    android:layout_marginLeft="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="25dp"
                     />
                 <TextView
+                    android:layout_marginLeft="10dp"
                     android:layout_marginTop="5dp"
                     android:layout_below="@id/profile_nick"
                     android:layout_toRightOf="@id/profile_avatar"

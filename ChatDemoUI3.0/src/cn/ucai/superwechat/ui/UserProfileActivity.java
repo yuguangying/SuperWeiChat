@@ -329,7 +329,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                     user = userAvatar;
                     SuperWeChatHelper.getInstance().saveAppContact(userAvatar);
                     EaseUserUtils.setAppCurrentUserAvatar(context,headAvatar);
-                    CommonUtils.showLongToast("updateAvatarSuccess");
+
                 }else {
                     dialog.dismiss();
                     Log.i("main", "onSuccess: updateAvatar fail");
@@ -366,10 +366,11 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
     private void setPicToView(Intent picdata) {
         Bundle extras = picdata.getExtras();
         if (extras != null) {
-//            dialog.dismiss();
             Bitmap photo = extras.getParcelable("data");
             Drawable drawable = new BitmapDrawable(getResources(), photo);
             headAvatar.setImageDrawable(drawable);
+            CommonUtils.showLongToast("updateAvatarSuccess");
+            dialog.dismiss();
 //            Toast.makeText(UserProfileActivity.this, getString(R.string.toast_updatephoto_success),
 //                    Toast.LENGTH_SHORT).show();
 //            uploadUserAvatar(Bitmap2Bytes(photo));
@@ -418,7 +419,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
             File file = new File(imagePath);//图片保存路径
             try {
                 BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
-                bitmap.compress(Bitmap.CompressFormat.PNG,100,bos);
+                bitmap.compress(Bitmap.CompressFormat.JPEG,100,bos);
                 bos.flush();
                 bos.close();
             } catch (IOException e) {
