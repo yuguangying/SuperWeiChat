@@ -17,15 +17,21 @@ import java.util.List;
 
 import com.hyphenate.chat.EMClient;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.SuperWeChatHelper;
+import cn.ucai.superwechat.bean.Resultbean;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.domain.InviteMessage;
 import cn.ucai.superwechat.domain.InviteMessage.InviteMesageStatus;
+import cn.ucai.superwechat.net.Dao;
+import cn.ucai.superwechat.utils.CommonUtils;
+import cn.ucai.superwechat.utils.OkHttpUtils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -40,6 +46,8 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 
 	private Context context;
 	private InviteMessgeDao messgeDao;
+	private String myName = SuperWeChatHelper.getInstance().getCurrentUsernName();
+
 
 	public NewFriendsMsgAdapter(Context context, int textViewResourceId, List<InviteMessage> objects) {
 		super(context, textViewResourceId, objects);
@@ -56,8 +64,8 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 			holder.avator = (ImageView) convertView.findViewById(R.id.avatar);
 			holder.reason = (TextView) convertView.findViewById(R.id.message);
 			holder.name = (TextView) convertView.findViewById(R.id.name);
-            holder.agree = (Button) convertView.findViewById(R.id.agree);
-			holder.status = (Button) convertView.findViewById(R.id.user_state);
+            holder.agree = (TextView) convertView.findViewById(R.id.agree);
+			holder.status = (TextView) convertView.findViewById(R.id.user_state);
 			holder.groupContainer = (LinearLayout) convertView.findViewById(R.id.ll_group);
 			holder.groupname = (TextView) convertView.findViewById(R.id.tv_groupName);
 			// holder.time = (TextView) convertView.findViewById(R.id.time);
@@ -92,7 +100,7 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 			}
 			
 			holder.reason.setText(msg.getReason());
-			holder.name.setText(msg.getFrom());
+			holder.name.setText("我是"+msg.getFrom());
 			// holder.time.setText(DateUtils.getTimestampString(new
 			// Date(msg.getTime())));
 			if (msg.getStatus() == InviteMesageStatus.BEAGREED) {
@@ -109,6 +117,7 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 				holder.status.setEnabled(true);
 				holder.status.setBackgroundResource(android.R.drawable.btn_default);
 				holder.status.setText(str7);
+
 				if(msg.getStatus() == InviteMesageStatus.BEINVITEED){
 					if (msg.getReason() == null) {
 						// use default text
@@ -128,8 +137,23 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
                 holder.agree.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // accept invitation
-                        acceptInvitation(holder.agree, holder.status, msg);
+						Dao.addContact(context, myName, msg.getFrom(), new OkHttpUtils.OnCompleteListener<Resultbean>() {
+							@Override
+							public void onSuccess(Resultbean result) {
+								if (result.isRetMsg()){
+									// accept invitation
+									acceptInvitation(holder.agree, holder.status, msg);
+								}else {
+									CommonUtils.showLongToast("网络异常");
+									Log.i("main", "onError: NewFriendsMsgAdapter 网络异常");
+								}
+							}
+							@Override
+							public void onError(String error) {
+								CommonUtils.showLongToast(error);
+								Log.i("main", "onError: NewFriendsMsgAdapter"+error);
+							}
+						});
                     }
                 });
 				holder.status.setOnClickListener(new OnClickListener() {
@@ -166,10 +190,9 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 	/**
 	 * accept invitation
 	 * 
-	 * @param button
-	 * @param username
+	 * @param buttonAgree，buttonRefuse
 	 */
-	private void acceptInvitation(final Button buttonAgree, final Button buttonRefuse, final InviteMessage msg) {
+	private void acceptInvitation(final TextView buttonAgree, final TextView buttonRefuse, final InviteMessage msg) {
 		final ProgressDialog pd = new ProgressDialog(context);
 		String str1 = context.getResources().getString(R.string.Are_agree_with);
 		final String str2 = context.getResources().getString(R.string.Has_agreed_to);
@@ -195,7 +218,6 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
                     values.put(InviteMessgeDao.COLUMN_NAME_STATUS, msg.getStatus().ordinal());
                     messgeDao.updateMessage(msg.getId(), values);
 					((Activity) context).runOnUiThread(new Runnable() {
-
 						@Override
 						public void run() {
 							pd.dismiss();
@@ -224,10 +246,9 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 	/**
      * decline invitation
      * 
-     * @param button
-     * @param username
+     * @param buttonAgree
      */
-    private void refuseInvitation(final Button buttonAgree, final Button buttonRefuse, final InviteMessage msg) {
+    private void refuseInvitation(final TextView buttonAgree, final TextView buttonRefuse, final InviteMessage msg) {
         final ProgressDialog pd = new ProgressDialog(context);
         String str1 = context.getResources().getString(R.string.Are_refuse_with);
         final String str2 = context.getResources().getString(R.string.Has_refused_to);
@@ -236,7 +257,7 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
         pd.setCanceledOnTouchOutside(false);
         pd.show();
 
-        new Thread(new Runnable() {
+		new Thread(new Runnable() {
             public void run() {
                 // call api
                 try {
@@ -283,8 +304,8 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 		ImageView avator;
 		TextView name;
 		TextView reason;
-        Button agree;
-		Button status;
+        TextView agree;
+		TextView status;
 		LinearLayout groupContainer;
 		TextView groupname;
 		// TextView time;
