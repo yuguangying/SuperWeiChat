@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import com.easemob.redpacketui.RedPacketConstant;
 import com.easemob.redpacketui.utils.RedPacketUtil;
+import com.google.gson.Gson;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConnectionListener;
 import com.hyphenate.EMContactListener;
@@ -26,6 +27,7 @@ import com.hyphenate.chat.EMMessage.Type;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.chat.EMTextMessageBody;
 
+import cn.ucai.superwechat.bean.Resultbean;
 import cn.ucai.superwechat.db.SuperWeChatDBManager;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.db.UserDao;
@@ -41,6 +43,7 @@ import cn.ucai.superwechat.ui.ChatActivity;
 import cn.ucai.superwechat.ui.MainActivity;
 import cn.ucai.superwechat.ui.VideoCallActivity;
 import cn.ucai.superwechat.ui.VoiceCallActivity;
+import cn.ucai.superwechat.utils.OkHttpUtils;
 import cn.ucai.superwechat.utils.PreferenceManager;
 
 import com.hyphenate.easeui.controller.EaseUI;
@@ -55,6 +58,7 @@ import com.hyphenate.easeui.model.EaseAtMessageHelper;
 import com.hyphenate.easeui.model.EaseNotifier;
 import com.hyphenate.easeui.model.EaseNotifier.EaseNotificationInfoProvider;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
+import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
 
@@ -632,6 +636,30 @@ public class SuperWeChatHelper {
             toAddUsers.put(username, user);
             localUsers.putAll(toAddUsers);
 
+            Map<String, UserAvatar> localAppUsers = getAppContactList();
+            if (!localAppUsers.containsKey(username)) {
+                Dao.addContact(appContext, EMClient.getInstance().getCurrentUser(), username, new OkHttpUtils.OnCompleteListener<Resultbean>() {
+                    @Override
+                    public void onSuccess(Resultbean result) {
+                        if (result.isRetMsg()) {
+                            String json = result.getRetData().toString().trim();
+                            Gson gson = new Gson();
+                            UserAvatar userAvatar = gson.fromJson(json, UserAvatar.class);
+                            saveAppContact(userAvatar);
+                            broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
+                            Log.i(TAG, "onSuccess: success");
+                        }else {
+                            Log.i(TAG, "onSuccess: "+result);
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Log.i(TAG, "onError: "+error);
+                    }
+                });
+            }
+
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
         }
 
@@ -972,12 +1000,14 @@ public class SuperWeChatHelper {
         }
         return userProManager;
     }
+
     public UserAppProfileManager getUserAppProfileManager() {
         if (userAppProManager == null) {
             userAppProManager = new UserAppProfileManager();
         }
         return userAppProManager;
     }
+
     void endCall() {
         try {
             EMClient.getInstance().callManager().endCall();
@@ -1306,10 +1336,10 @@ public class SuperWeChatHelper {
             if (appContactList != null) {
                 appContactList.clear();
             }
-            Log.i(TAG, "setAppContactList: "+appContactList.size());
+            Log.i(TAG, "setAppContactList: " + appContactList.size());
             return;
         }
-        Log.i(TAG, "setAppContactList: "+appContactList.size());
+        Log.i(TAG, "setAppContactList: " + appContactList.size());
         appContactList = aContactList;
     }
 

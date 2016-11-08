@@ -70,19 +70,9 @@
             android:textColor="#888888"
             android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/agree"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/user_state"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:text="@string/agree"
-            android:textSize="20sp"
-            android:textColor="@color/green"
-             android:visibility="gone"/>
+
         
-        <TextView
+        <Button
             android:id="@+id/user_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -90,8 +80,19 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:text="@string/refuse"
-            android:textColor="@color/red"
-            android:textSize="20sp" />
+            android:background="@color/line_color"
+            android:textSize="13sp" />
+        <Button
+            android:id="@+id/agree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/user_state"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:text="@string/agree"
+            android:textSize="13sp"
+            android:background="@color/green"
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <LinearLayout

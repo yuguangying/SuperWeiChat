@@ -80,4 +80,12 @@ public class Dao {
                 .targetClass(Resultbean.class)
                 .execute(listener);
     }
+    //http://101.251.196.90:8000/SuperWeChatServerV2.0/downloadContactAllList?m_contact_user_name=long
+    public static void downloadContactAllList(Context context, String name , OkHttpUtils.OnCompleteListener<Resultbean> listener){
+        OkHttpUtils<Resultbean> utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_ADD_CONTACT)
+                .addParam(I.Contact.USER_NAME,name)
+                .targetClass(Resultbean.class)
+                .execute(listener);
+    }
 }

@@ -84,7 +84,9 @@ public class AddContactActivity extends BaseActivity{
 						String s = result.getRetData().toString().trim();
 						Gson gson = new Gson();
 						UserAvatar userAvatar = gson.fromJson(s, UserAvatar.class);
+
 						boolean isContact = SuperWeChatHelper.getInstance().getAppContactList().containsValue(userAvatar);
+						Log.i("main", "onSuccess: add"+isContact);
 						MGFT.gotoFindProfile(AddContactActivity.this,userAvatar,isContact);
 					}else {
 						Log.i("AddContact", "false: 未找到");

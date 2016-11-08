@@ -133,12 +133,12 @@ public class RegisterActivity extends BaseActivity {
                     EMClient.getInstance().createAccount(username, pwd);
                     runOnUiThread(new Runnable() {
                         public void run() {
-                            if (!RegisterActivity.this.isFinishing())
-                                pd.dismiss();
+//                            if (!RegisterActivity.this.isFinishing())
+//                                pd.dismiss();
                             // save current user
                             SuperWeChatHelper.getInstance().setCurrentUserName(username);
                             Toast.makeText(getApplicationContext(), getResources().getString(R.string.Registered_successfully), Toast.LENGTH_SHORT).show();
-                            pd.dismiss();
+//                            pd.dismiss();
                             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                             finish();
                         }
@@ -167,6 +167,12 @@ public class RegisterActivity extends BaseActivity {
                 }
             }
         }).start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        pd.dismiss();
     }
 
     private void registerAppService() {

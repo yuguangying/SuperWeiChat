@@ -85,6 +85,9 @@ public class EaseUserUtils {
     public static void setAppUserAvatar(Context context, String username, ImageView imageView) {
         UserAvatar user = getAppUserInfo(username);
         Log.i("avatar", "setAppUserAvatar: "+user);
+        if (user==null){
+            user = new UserAvatar(username);
+        }
         if (user != null && user.getAvatar() != null) {
             try {
                 int avatarResId = Integer.parseInt(user.getAvatar());
