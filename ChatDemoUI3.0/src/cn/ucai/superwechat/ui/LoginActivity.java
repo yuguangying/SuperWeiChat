@@ -178,7 +178,7 @@ public class LoginActivity extends BaseActivity {
                     L.i("账户密码错误");
                     pd.dismiss();
                 } else {
-                    CommonUtils.showLongToast("登录成功");
+                    CommonUtils.showLongToast("登录失败");
                     L.i("登陆失败");
                     pd.dismiss();
                 }

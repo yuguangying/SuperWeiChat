@@ -16,17 +16,24 @@ package cn.ucai.superwechat.ui;
 import java.util.Hashtable;
 import java.util.Map;
 
+import com.google.gson.Gson;
 import com.hyphenate.chat.EMClient;
+
+import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.SuperWeChatHelper;
 
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.bean.Resultbean;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.db.UserDao;
+import cn.ucai.superwechat.net.Dao;
 import cn.ucai.superwechat.utils.MGFT;
+import cn.ucai.superwechat.utils.OkHttpUtils;
 import cn.ucai.superwechat.widget.ContactItemView;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.domain.UserAvatar;
 import com.hyphenate.easeui.ui.EaseContactListFragment;
+import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.util.EMLog;
 import com.hyphenate.util.NetUtils;
 
@@ -43,6 +50,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 /**
@@ -126,9 +134,7 @@ public class ContactListFragment extends EaseContactListFragment {
                 if (user != null) {
                     String username = user.getUsername();
                     // demo中直接进入聊天页面，实际一般是进入用户详情页
-                    Log.i("list", "onItemClick: "+SuperWeChatHelper.getInstance().getAppContactList());
                     UserAvatar contactUserAvatar = SuperWeChatHelper.getInstance().getAppContactList().get(username);
-                    Log.i("list", "onItemClick: "+contactUserAvatar);
                     MGFT.gotoFindProfile(getActivity(),contactUserAvatar);
                     //startActivity(new Intent(getActivity(), ChatActivity.class).putExtra("userId", username));
                 }
@@ -227,14 +233,37 @@ public class ContactListFragment extends EaseContactListFragment {
                 // remove invitation message
                 InviteMessgeDao dao = new InviteMessgeDao(getActivity());
                 dao.deleteMessage(toBeProcessUser.getUsername());
+                //添加的删除方法
+                Log.i("delete", "onContextItemSelected: "+toBeProcessUser.getUsername());
+                Dao.deleteContact(getContext(), SuperWeChatHelper.getInstance().getCurrentUsernName(), toBeProcessUser.getUsername(), new OkHttpUtils.OnCompleteListener<Resultbean>() {
+                    @Override
+                    public void onSuccess(Resultbean result) {
+                        if (result.isRetMsg()) {
+                            String json = result.getRetData().toString().trim();
+                            Gson gson = new Gson();
+                            UserAvatar userAvatar = gson.fromJson(json, UserAvatar.class);
+                            SuperWeChatHelper.getInstance().deleteAppContact(userAvatar);
+                            Log.i(TAG, "onSuccess:delete success");
+                        }else {
+                            Log.i(TAG, "onSuccess: "+result);
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+
+                    }
+                });
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
 			return true;
-		}else if(item.getItemId() == R.id.add_to_blacklist){
-			moveToBlacklist(toBeProcessUsername);
-			return true;
 		}
+//        else if(item.getItemId() == R.id.add_to_blacklist){
+//			moveToBlacklist(toBeProcessUsername);
+//			return true;
+//		}
 		return super.onContextItemSelected(item);
 	}
 

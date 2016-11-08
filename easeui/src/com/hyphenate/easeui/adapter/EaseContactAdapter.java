@@ -78,6 +78,9 @@ public class EaseContactAdapter extends ArrayAdapter<EaseUser> implements Sectio
             } else {
                 holder.headerView.setVisibility(View.VISIBLE);
                 holder.headerView.setText(header);
+                Log.i(TAG, "getView: ");
+
+                EaseUserUtils.setAppCurrentUserAvatar(getContext(), holder.avatar);
             }
         } else {
             holder.headerView.setVisibility(View.GONE);
