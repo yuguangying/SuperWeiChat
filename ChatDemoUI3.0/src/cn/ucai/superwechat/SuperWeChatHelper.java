@@ -647,7 +647,10 @@ public class SuperWeChatHelper {
                             UserAvatar userAvatar = gson.fromJson(json, UserAvatar.class);
                             Log.i(TAG, "onSuccess:save "+userAvatar);
                             saveAppContact(userAvatar);
-                            broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
+                            Intent intent = new Intent(Constant.ACTION_CONTACT_ADD);
+                            intent.putExtra("userAvatar",userAvatar);
+                            broadcastManager.sendBroadcast(intent);
+                            //broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
                             Log.i(TAG, "onSuccess: success");
                         }else {
                             Log.i(TAG, "onSuccess: "+result);
@@ -671,30 +674,7 @@ public class SuperWeChatHelper {
             userDao.deleteContact(username);
             inviteMessgeDao.deleteMessage(username);
 
-            //添加的删除方法
-            Map<String, UserAvatar> localAppUsers = SuperWeChatHelper.getInstance().getAppContactList();
-            localAppUsers.remove(username);
-            Log.i("delete", "onContactDeleted: "+username);
-            Dao.deleteContact(appContext, EMClient.getInstance().getCurrentUser(), username, new OkHttpUtils.OnCompleteListener<Resultbean>() {
-                @Override
-                public void onSuccess(Resultbean result) {
-                    if (result.isRetMsg()) {
-                        String json = result.getRetData().toString().trim();
-                        Gson gson = new Gson();
-                        UserAvatar userAvatar = gson.fromJson(json, UserAvatar.class);
-                        deleteAppContact(userAvatar);
-                        broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
-                        Log.i(TAG, "onSuccess:delete success");
-                    }else {
-                        Log.i(TAG, "onSuccess: "+result);
-                    }
-                }
-
-                @Override
-                public void onError(String error) {
-                    Log.i(TAG, "onError: "+error);
-                }
-            });
+            SuperWeChatHelper.getInstance().deleteAppContact(username);
 
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
         }
@@ -1376,8 +1356,13 @@ public class SuperWeChatHelper {
         appContactList.put(user.getMUserName(), user);
         demoModel.saveAppContact(user);
     }
-    public void deleteAppContact(UserAvatar user) {
-        appContactList.remove(user.getMUserName());
+
+    /**
+     * delete single contact
+     */
+    public void deleteAppContact(String username) {
+        appContactList.remove(username);
+        demoModel.deleteAppContact(username);
     }
     /**
      * get contact list

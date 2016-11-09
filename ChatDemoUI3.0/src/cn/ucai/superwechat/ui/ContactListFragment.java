@@ -100,6 +100,9 @@ public class ContactListFragment extends EaseContactListFragment {
         }
         if(inviteMessgeDao.getUnreadMessagesCount() > 0){
             applicationItem.showUnreadMsgView();
+            //修改：显示数量
+            Log.i("addNew", "refresh: "+inviteMessgeDao.getUnreadMessagesCount());
+            applicationItem.setUnreadCount(inviteMessgeDao.getUnreadMessagesCount());
         }else{
             applicationItem.hideUnreadMsgView();
         }
@@ -233,27 +236,6 @@ public class ContactListFragment extends EaseContactListFragment {
                 // remove invitation message
                 InviteMessgeDao dao = new InviteMessgeDao(getActivity());
                 dao.deleteMessage(toBeProcessUser.getUsername());
-                //添加的删除方法
-                Log.i("delete", "onContextItemSelected: "+toBeProcessUser.getUsername());
-                Dao.deleteContact(getContext(), SuperWeChatHelper.getInstance().getCurrentUsernName(), toBeProcessUser.getUsername(), new OkHttpUtils.OnCompleteListener<Resultbean>() {
-                    @Override
-                    public void onSuccess(Resultbean result) {
-                        if (result.isRetMsg()) {
-                            String json = result.getRetData().toString().trim();
-                            Gson gson = new Gson();
-                            UserAvatar userAvatar = gson.fromJson(json, UserAvatar.class);
-                            SuperWeChatHelper.getInstance().deleteAppContact(userAvatar);
-                            Log.i(TAG, "onSuccess:delete success");
-                        }else {
-                            Log.i(TAG, "onSuccess: "+result);
-                        }
-                    }
-
-                    @Override
-                    public void onError(String error) {
-
-                    }
-                });
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -261,9 +243,9 @@ public class ContactListFragment extends EaseContactListFragment {
 			return true;
 		}
 //        else if(item.getItemId() == R.id.add_to_blacklist){
-//			moveToBlacklist(toBeProcessUsername);
-//			return true;
-//		}
+//            moveToBlacklist(toBeProcessUsername);
+//            return true;
+//        }
 		return super.onContextItemSelected(item);
 	}
 
@@ -280,7 +262,25 @@ public class ContactListFragment extends EaseContactListFragment {
 		pd.setMessage(st1);
 		pd.setCanceledOnTouchOutside(false);
 		pd.show();
-		new Thread(new Runnable() {
+        //添加的删除方法
+        Log.i("delete", "onContextItemSelected: "+toBeProcessUser.getUsername());
+        Dao.deleteContact(getContext(), SuperWeChatHelper.getInstance().getCurrentUsernName(), toBeProcessUser.getUsername(), new OkHttpUtils.OnCompleteListener<Resultbean>() {
+            @Override
+            public void onSuccess(Resultbean result) {
+                if (result.isRetMsg()) {
+                    SuperWeChatHelper.getInstance().deleteAppContact(tobeDeleteUser.getUsername());
+                    Log.i(TAG, "onSuccess:delete success");
+                }else {
+                    Log.i(TAG, "onSuccess: "+result);
+                }
+            }
+            @Override
+            public void onError(String error) {
+
+            }
+        });
+
+        new Thread(new Runnable() {
 			public void run() {
 				try {
 					EMClient.getInstance().contactManager().deleteContact(tobeDeleteUser.getUsername());

@@ -285,6 +285,10 @@ public class SuperWeChatModel {
         UserDao dao = new UserDao(context);
         dao.saveAppContact(user);
     }
+    public void deleteAppContact(String username) {
+        UserDao dao = new UserDao(context);
+        dao.deleteAppContact(username);
+    }
 
     public Map<String,UserAvatar> getAppContactList() {
         UserDao dao = new UserDao(context);

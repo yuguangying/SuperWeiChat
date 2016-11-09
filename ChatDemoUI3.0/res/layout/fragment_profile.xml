@@ -20,19 +20,20 @@
                 android:id="@+id/profile"
                 android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="50dp">
+                android:layout_height="80dp">
                 <ImageView
                     android:id="@+id/profile_avatar"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_marginTop="2.5dp"
-                    android:layout_marginLeft="5dp"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
                     android:src="@drawable/default_avatar"/>
                 <TextView
                     android:layout_toRightOf="@id/profile_avatar"
                     android:id="@+id/profile_nick"
                     android:text="鳄鱼"
-                    android:textSize="15sp"
+                    android:textSize="16sp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginLeft="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="25dp"
@@ -44,7 +45,7 @@
                     android:layout_toRightOf="@id/profile_avatar"
                     android:id="@+id/profile_weixin"
                     android:text="鳄鱼"
-                    android:textSize="15sp"
+                    android:textSize="16sp"
                     android:layout_width="wrap_content"
                     android:layout_height="25dp"
                     />
@@ -57,25 +58,27 @@
             <RelativeLayout
                 android:id="@+id/profile_phone"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="60dp"
                 android:gravity="center_vertical">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/icon_me_photo"
                     android:text="@string/profile_txt_album"
+                    android:textSize="18sp"
                     android:gravity="center_vertical"/>
             </RelativeLayout>
             <RelativeLayout
                 android:id="@+id/profile_collect"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="60dp"
                 android:gravity="center_vertical">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/icon_me_collect"
                     android:text="@string/profile_txt_collect"
+                    android:textSize="18sp"
                     android:gravity="center_vertical"/>
             </RelativeLayout>
             <View
@@ -85,13 +88,14 @@
             <RelativeLayout
                 android:id="@+id/profile_money"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="60dp"
                 android:gravity="center_vertical">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/icon_me_money"
                     android:text="@string/profile_txt_money"
+                    android:textSize="18sp"
                     android:gravity="center_vertical"/>
 
             </RelativeLayout>
@@ -102,13 +106,14 @@
             <RelativeLayout
                 android:id="@+id/profile_smail"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="60dp"
                 android:gravity="center_vertical">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/icon_me_smail"
                     android:text="@string/profile_txt_smail"
+                    android:textSize="18sp"
                     android:gravity="center_vertical"/>
 
             </RelativeLayout>
@@ -119,13 +124,14 @@
             <RelativeLayout
                 android:id="@+id/profile_setting"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="60dp"
                 android:gravity="center_vertical">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/icon_me_setting"
                     android:text="@string/profile_txt_setting"
+                    android:textSize="18sp"
                     android:gravity="center_vertical"/>
 
             </RelativeLayout>

@@ -1,6 +1,7 @@
 package cn.ucai.superwechat.ui;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -38,7 +39,8 @@ public class SendActivity extends AppCompatActivity {
     EaseSwitchButton sendNotification;
     String verification;
     private ProgressDialog progressDialog;
-    UserAvatar user;
+   static UserAvatar user;
+    static Context context ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +48,7 @@ public class SendActivity extends AppCompatActivity {
         ButterKnife.inject(this);
         user = (UserAvatar) getIntent().getSerializableExtra("send");
         verification = sendYan.getText().toString().trim();
+        context = this;
     }
 
 
@@ -91,7 +94,9 @@ public class SendActivity extends AppCompatActivity {
                             progressDialog.dismiss();
                             String s1 = getResources().getString(R.string.send_successful);
                             Toast.makeText(getApplicationContext(), s1, Toast.LENGTH_LONG).show();
-                            //addContact();
+
+
+
                         }
                     });
                 } catch (final Exception e) {
@@ -107,8 +112,8 @@ public class SendActivity extends AppCompatActivity {
         }).start();
     }
 
-    private void addContact() {
-        Dao.addContact(this, SuperWeChatHelper.getInstance().getCurrentUsernName(), user.getMUserName(), new OkHttpUtils.OnCompleteListener<Resultbean>() {
+    public static void addNewContact(UserAvatar userAvatar) {
+        Dao.addContact(context, SuperWeChatHelper.getInstance().getCurrentUsernName(), user.getMUserName(), new OkHttpUtils.OnCompleteListener<Resultbean>() {
             @Override
             public void onSuccess(Resultbean result) {
                 if (result.isRetMsg()) {
@@ -116,9 +121,8 @@ public class SendActivity extends AppCompatActivity {
                     Gson gson = new Gson();
                     UserAvatar userAvatar = gson.fromJson(json, UserAvatar.class);
                     SuperWeChatHelper.getInstance().saveAppContact(userAvatar);
-                    Log.i(TAG, "onSuccess: success");
                 }else {
-                    Log.i(TAG, "onSuccess: "+result);
+                    Log.i("send", "onSuccess: "+result);
                 }
             }
             @Override
@@ -128,5 +132,6 @@ public class SendActivity extends AppCompatActivity {
             }
         });
     }
+
 
 }
