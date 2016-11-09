@@ -180,8 +180,8 @@ public class EaseContactAdapter extends ArrayAdapter<UserAvatar> implements Sect
                 for(int i=0;i<count;i++){
                     final UserAvatar user = mOriginalList.get(i);
                     String username = user.getMUserName();
-                    
-                    if(username.startsWith(prefixString)){
+                    String usernick = user.getMUserNick();
+                    if(username.contains(prefixString)||usernick.contains(prefixString)){
                         newValues.add(user);
                     }
                     else{
