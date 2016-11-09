@@ -15,7 +15,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMGroup;
 import cn.ucai.superwechat.R;
 import com.hyphenate.easeui.adapter.EaseContactAdapter;
-import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.UserAvatar;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseSidebar;
 
@@ -39,18 +39,18 @@ public class PickAtUserActivity extends BaseActivity{
         listView = (ListView) findViewById(R.id.list);
         sidebar.setListView(listView);
         List<String> members = group.getMembers();
-        List<EaseUser> userList = new ArrayList<EaseUser>();
+        List<UserAvatar> userList = new ArrayList<UserAvatar>();
         for(String username : members){
-            EaseUser user = EaseUserUtils.getUserInfo(username);
+            UserAvatar user = EaseUserUtils.getAppUserInfo(username);
             userList.add(user);
         }
 
-        Collections.sort(userList, new Comparator<EaseUser>() {
+        Collections.sort(userList, new Comparator<UserAvatar>() {
 
             @Override
-            public int compare(EaseUser lhs, EaseUser rhs) {
+            public int compare(UserAvatar lhs, UserAvatar rhs) {
                 if(lhs.getInitialLetter().equals(rhs.getInitialLetter())){
-                    return lhs.getNick().compareTo(rhs.getNick());
+                    return lhs.getMUserNick().compareTo(rhs.getMUserNick());
                 }else{
                     if("#".equals(lhs.getInitialLetter())){
                         return 1;
@@ -73,18 +73,18 @@ public class PickAtUserActivity extends BaseActivity{
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(isOwner){
                     if(position != 0) {
-                        EaseUser user = (EaseUser) listView.getItemAtPosition(position);
-                        if (EMClient.getInstance().getCurrentUser().equals(user.getUsername()))
+                        UserAvatar user = (UserAvatar) listView.getItemAtPosition(position);
+                        if (EMClient.getInstance().getCurrentUser().equals(user.getMUserName()))
                             return;
-                        setResult(RESULT_OK, new Intent().putExtra("username", user.getUsername()));
+                        setResult(RESULT_OK, new Intent().putExtra("username", user.getMUserName()));
                     }else{
                         setResult(RESULT_OK, new Intent().putExtra("username", getString(R.string.all_members)));
                     }
                 }else{
-                    EaseUser user = (EaseUser) listView.getItemAtPosition(position);
-                    if (EMClient.getInstance().getCurrentUser().equals(user.getUsername()))
+                    UserAvatar user = (UserAvatar) listView.getItemAtPosition(position);
+                    if (EMClient.getInstance().getCurrentUser().equals(user.getMUserName()))
                         return;
-                    setResult(RESULT_OK, new Intent().putExtra("username", user.getUsername()));
+                    setResult(RESULT_OK, new Intent().putExtra("username", user.getMUserName()));
                 }
 
                 finish();
@@ -108,7 +108,7 @@ public class PickAtUserActivity extends BaseActivity{
 
     private class PickUserAdapter extends EaseContactAdapter{
 
-        public PickUserAdapter(Context context, int resource, List<EaseUser> objects) {
+        public PickUserAdapter(Context context, int resource, List<UserAvatar> objects) {
             super(context, resource, objects);
         }
     }

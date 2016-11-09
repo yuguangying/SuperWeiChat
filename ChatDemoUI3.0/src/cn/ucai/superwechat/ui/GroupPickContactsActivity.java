@@ -33,7 +33,7 @@ import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.R;
 import com.hyphenate.easeui.adapter.EaseContactAdapter;
-import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.UserAvatar;
 import com.hyphenate.easeui.widget.EaseSidebar;
 
 import java.util.ArrayList;
@@ -42,6 +42,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class GroupPickContactsActivity extends BaseActivity {
+
 	/** if this is a new group */
 	protected boolean isCreatingNewGroup;
 	private PickContactAdapter contactAdapter;
@@ -64,18 +65,18 @@ public class GroupPickContactsActivity extends BaseActivity {
 		if(existMembers == null)
 			existMembers = new ArrayList<String>();
 		// get contact list
-		final List<EaseUser> alluserList = new ArrayList<EaseUser>();
-		for (EaseUser user : SuperWeChatHelper.getInstance().getContactList().values()) {
-			if (!user.getUsername().equals(Constant.NEW_FRIENDS_USERNAME) & !user.getUsername().equals(Constant.GROUP_USERNAME) & !user.getUsername().equals(Constant.CHAT_ROOM) & !user.getUsername().equals(Constant.CHAT_ROBOT))
+		final List<UserAvatar> alluserList = new ArrayList<UserAvatar>();
+		for (UserAvatar user : SuperWeChatHelper.getInstance().getAppContactList().values()) {
+			if (!user.getMUserName().equals(Constant.NEW_FRIENDS_USERNAME) & !user.getMUserName().equals(Constant.GROUP_USERNAME) & !user.getMUserName().equals(Constant.CHAT_ROOM) & !user.getMUserName().equals(Constant.CHAT_ROBOT))
 				alluserList.add(user);
 		}
 		// sort the list
-        Collections.sort(alluserList, new Comparator<EaseUser>() {
+        Collections.sort(alluserList, new Comparator<UserAvatar>() {
 
             @Override
-            public int compare(EaseUser lhs, EaseUser rhs) {
+            public int compare(UserAvatar lhs, UserAvatar rhs) {
                 if(lhs.getInitialLetter().equals(rhs.getInitialLetter())){
-                    return lhs.getNick().compareTo(rhs.getNick());
+                    return lhs.getMUserNick().compareTo(rhs.getMUserNick());
                 }else{
                     if("#".equals(lhs.getInitialLetter())){
                         return 1;
@@ -123,7 +124,7 @@ public class GroupPickContactsActivity extends BaseActivity {
 		List<String> members = new ArrayList<String>();
 		int length = contactAdapter.isCheckedArray.length;
 		for (int i = 0; i < length; i++) {
-			String username = contactAdapter.getItem(i).getUsername();
+			String username = contactAdapter.getItem(i).getMUserName();
 			if (contactAdapter.isCheckedArray[i] && !existMembers.contains(username)) {
 				members.add(username);
 			}
@@ -139,7 +140,7 @@ public class GroupPickContactsActivity extends BaseActivity {
 
 		private boolean[] isCheckedArray;
 
-		public PickContactAdapter(Context context, int resource, List<EaseUser> users) {
+		public PickContactAdapter(Context context, int resource, List<UserAvatar> users) {
 			super(context, resource, users);
 			isCheckedArray = new boolean[users.size()];
 		}
@@ -148,7 +149,7 @@ public class GroupPickContactsActivity extends BaseActivity {
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			View view = super.getView(position, convertView, parent);
 
-			final String username = getItem(position).getUsername();
+			final String username = getItem(position).getMUserName();
 
 			final CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkbox);
 			ImageView avatarView = (ImageView) view.findViewById(R.id.avatar);
