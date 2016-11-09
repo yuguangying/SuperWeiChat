@@ -47,6 +47,7 @@ public class SendActivity extends AppCompatActivity {
         setContentView(R.layout.activity_send);
         ButterKnife.inject(this);
         user = (UserAvatar) getIntent().getSerializableExtra("send");
+        Log.i("aaa", "onCreate: "+user);
         verification = sendYan.getText().toString().trim();
         context = this;
     }
@@ -112,26 +113,7 @@ public class SendActivity extends AppCompatActivity {
         }).start();
     }
 
-    public static void addNewContact(UserAvatar userAvatar) {
-        Dao.addContact(context, SuperWeChatHelper.getInstance().getCurrentUsernName(), user.getMUserName(), new OkHttpUtils.OnCompleteListener<Resultbean>() {
-            @Override
-            public void onSuccess(Resultbean result) {
-                if (result.isRetMsg()) {
-                    String json = result.getRetData().toString().trim();
-                    Gson gson = new Gson();
-                    UserAvatar userAvatar = gson.fromJson(json, UserAvatar.class);
-                    SuperWeChatHelper.getInstance().saveAppContact(userAvatar);
-                }else {
-                    Log.i("send", "onSuccess: "+result);
-                }
-            }
-            @Override
-            public void onError(String error) {
-                Log.i("send", "onError: "+error);
-                CommonUtils.showLongToast(error);
-            }
-        });
-    }
+
 
 
 }

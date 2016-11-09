@@ -37,6 +37,10 @@ import com.hyphenate.easeui.controller.EaseUI;
 import com.hyphenate.easeui.domain.UserAvatar;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -49,6 +53,7 @@ import cn.ucai.superwechat.db.SuperWeChatDBManager;
 import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.net.Dao;
 import cn.ucai.superwechat.utils.CommonUtils;
+import cn.ucai.superwechat.utils.ConvertUtils;
 import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.utils.OkHttpUtils;
 
@@ -225,7 +230,31 @@ public class LoginActivity extends BaseActivity {
                 UserDao ud = new UserDao(context);
                 ud.saveUser(userAvatar);
 
+                Dao.downloadContactAllList(context, userAvatar.getMUserName(), new OkHttpUtils.OnCompleteListener<Resultbean>() {
+                    @Override
+                    public void onSuccess(Resultbean result) {
+                        if (result.isRetMsg()) {
+                            String json = result.getRetData().toString().trim();
+                            Gson gson = new Gson();
+                            UserAvatar[] users = gson.fromJson(json, UserAvatar[].class);
+                            Map<String, UserAvatar> aContactList = new LinkedHashMap<String, UserAvatar>();
+                            for (UserAvatar u : users) {
+                                aContactList.put(u.getMUserName(),u);
+                            }
+                            SuperWeChatHelper.getInstance().setAppContactList(aContactList);
+                            Log.i(TAG, "onSuccess: "+users.length);
+                        } else {
+                            Log.i(TAG, "onSuccess: " + result);
+                        }
+                    }
 
+                    @Override
+                    public void onError(String error) {
+                        CommonUtils.showLongToast(error);
+                        Log.i(TAG, "onError: " + error);
+                    }
+                });
+                Log.i("size", "onSuccess: "+SuperWeChatHelper.getInstance().getAppContactList().size());
                 Intent intent = new Intent(LoginActivity.this,
                         MainActivity.class);
                 startActivity(intent);

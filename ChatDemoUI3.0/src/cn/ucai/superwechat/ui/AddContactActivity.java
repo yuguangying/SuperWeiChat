@@ -84,6 +84,7 @@ public class AddContactActivity extends BaseActivity{
 						String s = result.getRetData().toString().trim();
 						Gson gson = new Gson();
 						UserAvatar userAvatar = gson.fromJson(s, UserAvatar.class);
+						Log.e("user", "onSuccess: "+userAvatar);
 						MGFT.gotoFindProfile(AddContactActivity.this,userAvatar);
 					}else {
 						Log.i("AddContact", "false: 未找到");

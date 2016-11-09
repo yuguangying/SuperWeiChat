@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -43,10 +44,12 @@ public class ContactItemView extends LinearLayout{
     }
     
     public void setUnreadCount(int unreadCount){
+        Log.i("count", "setUnreadCount: 数量"+unreadCount);
         unreadMsgView.setText(String.valueOf(unreadCount));
     }
     
     public void showUnreadMsgView(){
+        Log.i("count", "showUnreadMsgView: 红点");
         unreadMsgView.setVisibility(View.VISIBLE);
     }
     public void hideUnreadMsgView(){

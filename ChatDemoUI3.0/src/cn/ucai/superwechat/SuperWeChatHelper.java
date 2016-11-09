@@ -43,6 +43,7 @@ import cn.ucai.superwechat.ui.ChatActivity;
 import cn.ucai.superwechat.ui.MainActivity;
 import cn.ucai.superwechat.ui.VideoCallActivity;
 import cn.ucai.superwechat.ui.VoiceCallActivity;
+import cn.ucai.superwechat.utils.CommonUtils;
 import cn.ucai.superwechat.utils.OkHttpUtils;
 import cn.ucai.superwechat.utils.PreferenceManager;
 
@@ -624,7 +625,7 @@ public class SuperWeChatHelper {
     public class MyContactListener implements EMContactListener {
 
         @Override
-        public void onContactAdded(String username) {
+        public void onContactAdded(final String username) {
             // save contact
             Map<String, EaseUser> localUsers = getContactList();
             Map<String, EaseUser> toAddUsers = new HashMap<String, EaseUser>();
@@ -635,22 +636,20 @@ public class SuperWeChatHelper {
             }
             toAddUsers.put(username, user);
             localUsers.putAll(toAddUsers);
-
+            Log.e("add", "onContactAdded: "+username );
             Map<String, UserAvatar> localAppUsers = getAppContactList();
+            //添加好友：两条数据
             if (!localAppUsers.containsKey(username)) {
-                Dao.addContact(appContext, EMClient.getInstance().getCurrentUser(), username, new OkHttpUtils.OnCompleteListener<Resultbean>() {
+                Dao.addContact(appContext,  username,EMClient.getInstance().getCurrentUser(),
+                        new OkHttpUtils.OnCompleteListener<Resultbean>() {
                     @Override
                     public void onSuccess(Resultbean result) {
                         if (result.isRetMsg()) {
                             String json = result.getRetData().toString().trim();
                             Gson gson = new Gson();
                             UserAvatar userAvatar = gson.fromJson(json, UserAvatar.class);
-                            Log.i(TAG, "onSuccess:save "+userAvatar);
                             saveAppContact(userAvatar);
-                            Intent intent = new Intent(Constant.ACTION_CONTACT_ADD);
-                            intent.putExtra("userAvatar",userAvatar);
-                            broadcastManager.sendBroadcast(intent);
-                            //broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
+                            broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
                             Log.i(TAG, "onSuccess: success");
                         }else {
                             Log.i(TAG, "onSuccess: "+result);
@@ -662,6 +661,26 @@ public class SuperWeChatHelper {
                         Log.i(TAG, "onError: "+error);
                     }
                 });
+                Dao.addContact(appContext, EMClient.getInstance().getCurrentUser(), username,
+                        new OkHttpUtils.OnCompleteListener<Resultbean>() {
+                            @Override
+                            public void onSuccess(Resultbean result) {
+                                if (result.isRetMsg()) {
+                                    String json = result.getRetData().toString().trim();
+                                    Gson gson = new Gson();
+                                    UserAvatar user = gson.fromJson(json, UserAvatar.class);
+                                    saveAppContact(user);
+                                    Log.i(TAG, "onSuccess: ");
+                                }else {
+                                    Log.i("send", "onSuccess: "+result);
+                                }
+                            }
+                            @Override
+                            public void onError(String error) {
+                                Log.i("send", "onError: "+error);
+                                CommonUtils.showLongToast(error);
+                            }
+                        });
             }
 
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
@@ -700,8 +719,10 @@ public class SuperWeChatHelper {
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
         }
 
+        //登录时会调用
         @Override
-        public void onContactAgreed(String username) {
+        public void onContactAgreed(final String username) {
+            Log.e("add", "onContactAgreed: "+username );
             List<InviteMessage> msgs = inviteMessgeDao.getMessagesList();
             for (InviteMessage inviteMessage : msgs) {
                 if (inviteMessage.getFrom().equals(username)) {
@@ -714,6 +735,8 @@ public class SuperWeChatHelper {
             msg.setTime(System.currentTimeMillis());
             Log.d(TAG, username + "accept your request");
             msg.setStatus(InviteMesageStatus.BEAGREED);
+
+
             notifyNewInviteMessage(msg);
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
         }
@@ -1354,6 +1377,7 @@ public class SuperWeChatHelper {
      */
     public void saveAppContact(UserAvatar user) {
         appContactList.put(user.getMUserName(), user);
+        Log.i("login", "saveAppContact: "+user);
         demoModel.saveAppContact(user);
     }
 

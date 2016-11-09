@@ -368,10 +368,8 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constant.ACTION_CONTACT_CHANAGED);
         intentFilter.addAction(Constant.ACTION_GROUP_CHANAGED);
-        intentFilter.addAction(Constant.ACTION_CONTACT_ADD);
         intentFilter.addAction(RedPacketConstant.REFRESH_GROUP_RED_PACKET_ACTION);
         broadcastReceiver = new BroadcastReceiver() {
-
             @Override
             public void onReceive(Context context, Intent intent) {
                 updateUnreadLabel();
@@ -390,14 +388,6 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
                 if (action.equals(Constant.ACTION_GROUP_CHANAGED)) {
                     if (EaseCommonUtils.getTopActivity(MainActivity.this).equals(GroupsActivity.class.getName())) {
                         GroupsActivity.instance.onResume();
-                    }
-                }
-                if (action.equals(Constant.ACTION_CONTACT_ADD)){
-                    UserAvatar userAvatar = (UserAvatar) getIntent().getSerializableExtra("userAvatar");
-                    Log.i("addNew", "onReceive: "+userAvatar);
-                    if (userAvatar!=null){
-                        Log.i("addNew", "onReceive: contact chanaged");
-                        SendActivity.addNewContact(userAvatar);
                     }
                 }
                 //red packet code : 处理红包回执透传消息
@@ -497,12 +487,12 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
      */
     public void updateUnreadLabel() {
         int count = getUnreadMsgCountTotal();
-		if (count > 0) {
-            mainDMTH.setHasNew(0, true);
+//		if (count > 0) {
+//            mainDMTH.setHasNew(0, true);
             mainDMTH.setUnreadCount(0,count);
-		} else {
-            mainDMTH.setHasNew(0, false);
-		}
+//		} else {
+//            mainDMTH.setHasNew(0, false);
+//		}
     }
 
     /**

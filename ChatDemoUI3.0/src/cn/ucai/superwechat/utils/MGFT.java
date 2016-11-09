@@ -29,6 +29,7 @@ public class MGFT {
         context.startActivity(intent);
     }
 
+
     public static void gotoSend(Activity context, UserAvatar user) {
         Intent intent = new Intent();
         intent.setClass(context, SendActivity.class);

@@ -40,16 +40,21 @@ public class FindDetailed extends AppCompatActivity {
         setContentView(R.layout.activity_find_detailed);
         ButterKnife.inject(this);
         user = (UserAvatar) getIntent().getSerializableExtra("name");
-        if (!SuperWeChatHelper.getInstance().getAppContactList().containsKey(user.getMUserName())) {
-            findAdd.setVisibility(View.VISIBLE);
-        } else {
-            findSend.setVisibility(View.VISIBLE);
-            findVideo.setVisibility(View.VISIBLE);
-        }
         if (user != null) {
-            findName.setText(user.getMUserName());
-            findNick.setText(user.getMUserNick());
-            EaseUserUtils.setAppUserAvatar(this, user.getMUserName(), findHeadAvatar);
+            if (!SuperWeChatHelper.getInstance().getAppContactList().containsKey(user.getMUserName())) {
+                findAdd.setVisibility(View.VISIBLE);
+            } else {
+                Log.i("main", "onCreate: "+user);
+                findSend.setVisibility(View.VISIBLE);
+                findVideo.setVisibility(View.VISIBLE);
+            }
+            if (user != null) {
+                findName.setText(user.getMUserName());
+                findNick.setText(user.getMUserNick());
+                EaseUserUtils.setAppUserAvatar(this, user.getMUserName(), findHeadAvatar);
+            }
+        }else{
+            Log.e("findDetailed", "onCreate:  user == null");
         }
     }
 
