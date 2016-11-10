@@ -16,7 +16,10 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.hyphenate.easeui.R;
+<<<<<<< HEAD
 import com.hyphenate.easeui.domain.EaseUser;
+=======
+>>>>>>> d9c562d3812813002a2f581b0209c33509ca93b2
 import com.hyphenate.easeui.domain.UserAvatar;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.util.EMLog;
@@ -25,11 +28,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EaseContactAdapter extends ArrayAdapter<UserAvatar> implements SectionIndexer{
+<<<<<<< HEAD
 
+=======
+>>>>>>> d9c562d3812813002a2f581b0209c33509ca93b2
     private static final String TAG = "ContactAdapter";
     List<String> list;
     List<UserAvatar> userList;
     List<UserAvatar> copyUserList;
+<<<<<<< HEAD
+=======
+
+>>>>>>> d9c562d3812813002a2f581b0209c33509ca93b2
     private LayoutInflater layoutInflater;
     private SparseIntArray positionOfSection;
     private SparseIntArray sectionOfPosition;

@@ -17,12 +17,19 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import cn.ucai.superwechat.R;
+<<<<<<< HEAD
 import com.hyphenate.easeui.domain.EaseUser;
+=======
+>>>>>>> d9c562d3812813002a2f581b0209c33509ca93b2
 import com.hyphenate.easeui.domain.UserAvatar;
 import com.hyphenate.easeui.widget.EaseAlertDialog;
 import com.hyphenate.easeui.widget.EaseAlertDialog.AlertDialogUser;
 
 public class ForwardMessageActivity extends PickContactNoCheckboxActivity {
+<<<<<<< HEAD
+=======
+
+>>>>>>> d9c562d3812813002a2f581b0209c33509ca93b2
 	private UserAvatar selectUser;
 	private String forward_msg_id;
 

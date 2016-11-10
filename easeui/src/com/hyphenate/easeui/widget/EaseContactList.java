@@ -14,9 +14,11 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-import com.hyphenate.easeui.R;
 import com.hyphenate.easeui.adapter.EaseContactAdapter;
+<<<<<<< HEAD
 import com.hyphenate.easeui.domain.EaseUser;
+=======
+>>>>>>> d9c562d3812813002a2f581b0209c33509ca93b2
 import com.hyphenate.easeui.domain.UserAvatar;
 
 public class EaseContactList extends RelativeLayout {
@@ -45,7 +47,12 @@ public class EaseContactList extends RelativeLayout {
                 if(adapter != null){
                 	adapter.clear();
                 	adapter.addAll(new ArrayList<UserAvatar>(contactList));
+<<<<<<< HEAD
                 	adapter.notifyDataSetChanged();	
+=======
+                	adapter.notifyDataSetChanged();
+
+>>>>>>> d9c562d3812813002a2f581b0209c33509ca93b2
                 }
                 break;
             default:

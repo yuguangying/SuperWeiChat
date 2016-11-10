@@ -30,7 +30,7 @@ import cn.ucai.superwechat.net.Dao;
 import cn.ucai.superwechat.utils.MGFT;
 import cn.ucai.superwechat.utils.OkHttpUtils;
 import cn.ucai.superwechat.widget.ContactItemView;
-import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.UserAvatar;
 import com.hyphenate.easeui.domain.UserAvatar;
 import com.hyphenate.easeui.ui.EaseContactListFragment;
 import com.hyphenate.easeui.utils.EaseUserUtils;
