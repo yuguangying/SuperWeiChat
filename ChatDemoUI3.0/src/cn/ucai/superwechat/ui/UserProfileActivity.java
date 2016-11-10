@@ -19,6 +19,7 @@ import cn.ucai.superwechat.bean.Resultbean;
 import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.net.Dao;
 import cn.ucai.superwechat.utils.CommonUtils;
+import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.utils.OkHttpUtils;
 
 import com.hyphenate.easeui.domain.EaseUser;
@@ -76,7 +77,9 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         context = this;
         initView();
         initListener();
-        user = EaseUserUtils.getAppUserInfo(EMClient.getInstance().getCurrentUser());
+        UserDao ud = new UserDao(context);
+        user = SuperWeChatHelper.getInstance().getCurrentUser();
+        L.e("user","loginActivity："+user);
     }
 
     private void initView() {
@@ -107,7 +110,6 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         rlNickName.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("main", "onClick: rl_nickname");
                 editText = new EditText(context);
                 editText.setText(user.getMUserNick().trim());
                 new Builder(context).setTitle(R.string.setting_nickname).setIcon(android.R.drawable.ic_dialog_info).setView(editText)
@@ -134,7 +136,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
     private void initListener() {
         EaseUserUtils.setAppCurrentUserAvatar(this, headAvatar);
         String mUserNick = SuperWeChatHelper.getInstance().getUserAvatar().getMUserNick();
-        //EaseUserUtils.setAppCurrentUserNick(profileNick);
+        //EaseUserUtils.setAppCurrentUserNick(tvNickName);
         tvNickName.setText(mUserNick);
         EaseUserUtils.setAppCurrentUserNameWithNo(tvUsername);
     }
@@ -316,12 +318,10 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         dialog = ProgressDialog.show(this, getString(R.string.dl_update_photo), getString(R.string.dl_waiting));
         dialog.show();
         File file = savebitmapFile(data);
-        Log.i("result", "updateAvatar: "+file.getAbsolutePath());
         Dao.updateAvatar(context, user.getMUserName(), file, new OkHttpUtils.OnCompleteListener<Resultbean>() {
             @Override
             public void onSuccess(Resultbean result) {
                 if (result.isRetMsg()){
-                    Log.i("result", "onSuccess: "+result);
                     setPicToView(data);
                     String json = result.getRetData().toString();
                     Gson gson = new Gson();

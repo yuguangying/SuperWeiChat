@@ -206,7 +206,6 @@ public class LoginActivity extends BaseActivity {
         EMClient.getInstance().login(currentUsername, currentPassword, new EMCallBack() {
             @Override
             public void onSuccess() {
-                Log.d(TAG, "login: onSuccess");
                 // ** manually load all local groups and conversation
                 EMClient.getInstance().groupManager().loadAllGroups();
                 EMClient.getInstance().chatManager().loadAllConversations();
@@ -230,35 +229,11 @@ public class LoginActivity extends BaseActivity {
                 UserDao ud = new UserDao(context);
                 ud.saveUser(userAvatar);
 
-                Dao.downloadContactAllList(context, userAvatar.getMUserName(), new OkHttpUtils.OnCompleteListener<Resultbean>() {
-                    @Override
-                    public void onSuccess(Resultbean result) {
-                        if (result.isRetMsg()) {
-                            String json = result.getRetData().toString().trim();
-                            Gson gson = new Gson();
-                            UserAvatar[] users = gson.fromJson(json, UserAvatar[].class);
-                            Map<String, UserAvatar> aContactList = new LinkedHashMap<String, UserAvatar>();
-                            for (UserAvatar u : users) {
-                                aContactList.put(u.getMUserName(),u);
-                            }
-                            SuperWeChatHelper.getInstance().setAppContactList(aContactList);
-                            Log.i(TAG, "onSuccess: "+users.length);
-                        } else {
-                            Log.i(TAG, "onSuccess: " + result);
-                        }
-                    }
-
-                    @Override
-                    public void onError(String error) {
-                        CommonUtils.showLongToast(error);
-                        Log.i(TAG, "onError: " + error);
-                    }
-                });
-                Log.i("size", "onSuccess: "+SuperWeChatHelper.getInstance().getAppContactList().size());
                 Intent intent = new Intent(LoginActivity.this,
                         MainActivity.class);
                 startActivity(intent);
-
+                L.e("ContactList：","login : "+SuperWeChatHelper.getInstance().getAppContactList().size());
+                L.i("login："+userAvatar);
                 finish();
             }
 

@@ -124,8 +124,6 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
 //        titleWeiXin.setVisibility(View.VISIBLE);
         ButterKnife.inject(this);
         // runtime permission for android 6.0, just require all permissions here for simple
-        Map<String, UserAvatar> appContactList = SuperWeChatHelper.getInstance().getAppContactList();
-        Log.i("list", "onCreate: " + appContactList.toString());
         requestPermissions();
         contactListFragment = new ContactListFragment();
         conversationListFragment = new ConversationListFragment();

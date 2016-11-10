@@ -47,7 +47,6 @@ public class FindDetailed extends AppCompatActivity {
             if (!SuperWeChatHelper.getInstance().getAppContactList().containsKey(user.getMUserName())) {
                 findAdd.setVisibility(View.VISIBLE);
             } else {
-                Log.i("main", "onCreate: "+user);
                 findSend.setVisibility(View.VISIBLE);
                 findVideo.setVisibility(View.VISIBLE);
             }

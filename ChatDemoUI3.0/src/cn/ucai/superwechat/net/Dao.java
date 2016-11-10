@@ -2,6 +2,9 @@ package cn.ucai.superwechat.net;
 
 import android.content.Context;
 
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMGroup;
+
 import java.io.File;
 
 import cn.ucai.superwechat.I;
@@ -81,10 +84,10 @@ public class Dao {
                 .execute(listener);
     }
     //http://101.251.196.90:8000/SuperWeChatServerV2.0/downloadContactAllList?m_contact_user_name=long
-    public static void downloadContactAllList(Context context, String name , OkHttpUtils.OnCompleteListener<Resultbean> listener){
+    public static void downloadContactAllList(Context context, OkHttpUtils.OnCompleteListener<Resultbean> listener){
         OkHttpUtils<Resultbean> utils = new OkHttpUtils<>(context);
-        utils.setRequestUrl(I.REQUEST_ADD_CONTACT)
-                .addParam(I.Contact.USER_NAME,name)
+        utils.setRequestUrl(I.REQUEST_DOWNLOAD_CONTACT_ALL_LIST)
+                .addParam(I.Contact.USER_NAME, EMClient.getInstance().getCurrentUser())
                 .targetClass(Resultbean.class)
                 .execute(listener);
     }
@@ -95,6 +98,35 @@ public class Dao {
                 .addParam(I.Contact.USER_NAME,name)
                 .addParam(I.Contact.CU_NAME,cname)
                 .targetClass(Resultbean.class)
+                .execute(listener);
+    }
+    //http://101.251.196.90:8000/SuperWeChatServerV2.0/createGroup?
+    // m_group_hxid=d&m_group_name=d&m_group_description=d&m_group_owner=d&m_group_is_public=true&m_group_allow_invites=true
+    public static void createGroup(Context context, EMGroup emGroup, File file, OkHttpUtils.OnCompleteListener<Resultbean> listener){
+        OkHttpUtils<Resultbean> utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_CREATE_GROUP)
+                .addParam(I.Group.HX_ID,emGroup.getGroupId())
+                .addParam(I.Group.NAME,emGroup.getGroupName())
+                .addParam(I.Group.DESCRIPTION,emGroup.getDescription())
+                .addParam(I.Group.OWNER,emGroup.getOwner())
+                .addParam(I.Group.IS_PUBLIC,String.valueOf(emGroup.isPublic()))
+                .addParam(I.Group.ALLOW_INVITES,String.valueOf(emGroup.isAllowInvites()))
+                .targetClass(Resultbean.class)
+                .addFile2(file)
+                .post()
+                .execute(listener);
+    }
+    public static void createGroup(Context context, EMGroup emGroup , OkHttpUtils.OnCompleteListener<Resultbean> listener){
+        OkHttpUtils<Resultbean> utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_CREATE_GROUP)
+                .addParam(I.Group.HX_ID,emGroup.getGroupId())
+                .addParam(I.Group.NAME,emGroup.getGroupName())
+                .addParam(I.Group.DESCRIPTION,emGroup.getDescription())
+                .addParam(I.Group.OWNER,emGroup.getOwner())
+                .addParam(I.Group.IS_PUBLIC,String.valueOf(emGroup.isPublic()))
+                .addParam(I.Group.ALLOW_INVITES,String.valueOf(emGroup.isAllowInvites()))
+                .targetClass(Resultbean.class)
+                .post()
                 .execute(listener);
     }
 }

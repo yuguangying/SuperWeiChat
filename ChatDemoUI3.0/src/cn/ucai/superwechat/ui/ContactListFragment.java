@@ -27,6 +27,7 @@ import cn.ucai.superwechat.bean.Resultbean;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.net.Dao;
+import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.utils.MGFT;
 import cn.ucai.superwechat.utils.OkHttpUtils;
 import cn.ucai.superwechat.widget.ContactItemView;
@@ -100,8 +101,6 @@ public class ContactListFragment extends EaseContactListFragment {
         }
         if(inviteMessgeDao.getUnreadMessagesCount() > 0){
             applicationItem.showUnreadMsgView();
-            //修改：显示数量
-            Log.i("addNew", "refresh: "+inviteMessgeDao.getUnreadMessagesCount());
             applicationItem.setUnreadCount(inviteMessgeDao.getUnreadMessagesCount());
         }else{
             applicationItem.hideUnreadMsgView();
@@ -126,6 +125,7 @@ public class ContactListFragment extends EaseContactListFragment {
         //设置联系人数据
 
         Map<String, UserAvatar> m = SuperWeChatHelper.getInstance().getAppContactList();
+        L.e("ContactList","contactListFragment : "+m.size());
         if (m instanceof Hashtable<?, ?>) {
             m = (Map<String, UserAvatar>) ((Hashtable<String, UserAvatar>)m).clone();
         }
@@ -140,7 +140,6 @@ public class ContactListFragment extends EaseContactListFragment {
                     String username = user.getMUserName();
                     // demo中直接进入聊天页面，实际一般是进入用户详情页
                     UserAvatar contactUserAvatar = SuperWeChatHelper.getInstance().getAppContactList().get(username);
-                    Log.e("user", "onSuccess: "+contactUserAvatar);
                     MGFT.gotoFindProfile(getActivity(),contactUserAvatar);
                     //startActivity(new Intent(getActivity(), ChatActivity.class).putExtra("userId", username));
                 }
@@ -272,7 +271,6 @@ public class ContactListFragment extends EaseContactListFragment {
             public void onSuccess(Resultbean result) {
                 if (result.isRetMsg()) {
                     SuperWeChatHelper.getInstance().deleteAppContact(tobeDeleteUser.getMUserName());
-                    Log.i(TAG, "onSuccess:delete success");
                 }else {
                     Log.i(TAG, "onSuccess: "+result);
                 }

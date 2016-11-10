@@ -72,17 +72,13 @@ public class GroupsActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.em_fragment_groups);
 
-		instance = this;
-		inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		grouplist = EMClient.getInstance().groupManager().getAllGroups();
-		groupListView = (ListView) findViewById(R.id.list);
-		//show group list
-        groupAdapter = new GroupAdapter(this, 1, grouplist);
-        groupListView.setAdapter(groupAdapter);
-		
-		swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
-		swipeRefreshLayout.setColorSchemeResources(R.color.holo_blue_bright, R.color.holo_green_light,
-		                R.color.holo_orange_light, R.color.holo_red_light);
+		initView();
+		setListener();
+
+
+	}
+
+	private void setListener() {
 		//pull down to refresh
 		swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
 
@@ -102,7 +98,7 @@ public class GroupsActivity extends BaseActivity {
 				}.start();
 			}
 		});
-		
+
 		groupListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -136,7 +132,20 @@ public class GroupsActivity extends BaseActivity {
 				return false;
 			}
 		});
-		
+	}
+
+	private void initView() {
+		instance = this;
+		inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		grouplist = EMClient.getInstance().groupManager().getAllGroups();
+		groupListView = (ListView) findViewById(R.id.list);
+		//show group list
+		groupAdapter = new GroupAdapter(this, 1, grouplist);
+		groupListView.setAdapter(groupAdapter);
+
+		swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
+		swipeRefreshLayout.setColorSchemeResources(R.color.holo_blue_bright, R.color.holo_green_light,
+		                R.color.holo_orange_light, R.color.holo_red_light);
 	}
 
 	@Override

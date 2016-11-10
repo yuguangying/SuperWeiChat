@@ -30,12 +30,10 @@ public class WelcomeActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.welcome_login:
-                L.i("welcome_login");
                 startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
                 finish();
                 break;
             case R.id.welcome_register:
-                L.i("welcome_register");
                 startActivity(new Intent(WelcomeActivity.this, RegisterActivity.class));
                 finish();
                 break;

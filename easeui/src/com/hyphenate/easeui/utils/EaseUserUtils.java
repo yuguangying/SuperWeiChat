@@ -37,7 +37,6 @@ public class EaseUserUtils {
 
     public static UserAvatar getAppUserInfo(String username) {
         if (userProvider != null) {
-            Log.i("main", "getAppUserInfo: "+userProvider.getAppUser(username));
             return userProvider.getAppUser(username);
         }
         return null;

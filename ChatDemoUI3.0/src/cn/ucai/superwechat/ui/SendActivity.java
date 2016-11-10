@@ -47,7 +47,6 @@ public class SendActivity extends AppCompatActivity {
         setContentView(R.layout.activity_send);
         ButterKnife.inject(this);
         user = (UserAvatar) getIntent().getSerializableExtra("send");
-        Log.i("aaa", "onCreate: "+user);
         verification = sendYan.getText().toString().trim();
         context = this;
     }

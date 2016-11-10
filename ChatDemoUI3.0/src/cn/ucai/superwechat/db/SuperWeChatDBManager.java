@@ -481,7 +481,7 @@ public class SuperWeChatDBManager {
             db.delete(UserDao.USER_TABLE_NAME, null, null);
             for (UserAvatar user : contactList) {
                 ContentValues values = new ContentValues();
-                values.put(UserDao.USER_TABLE_NAME, user.getMUserName());
+                values.put(UserDao.USER_COLUMN_NAME, user.getMUserName());
                 if (user.getMUserNick() != null)
                     values.put(UserDao.USER_COLUMN_NICK, user.getMUserNick());
                 if (user.getMAvatarId() != null)
