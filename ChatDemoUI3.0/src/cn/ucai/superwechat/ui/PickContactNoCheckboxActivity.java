@@ -26,6 +26,7 @@ import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.R;
 import com.hyphenate.easeui.adapter.EaseContactAdapter;
 import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.UserAvatar;
 import com.hyphenate.easeui.widget.EaseSidebar;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ import java.util.Map.Entry;
 public class PickContactNoCheckboxActivity extends BaseActivity {
 
 	protected EaseContactAdapter contactAdapter;
-	private List<EaseUser> contactList;
+	private List<UserAvatar> contactList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,7 @@ public class PickContactNoCheckboxActivity extends BaseActivity {
 		ListView listView = (ListView) findViewById(R.id.list);
 		EaseSidebar sidebar = (EaseSidebar) findViewById(R.id.sidebar);
 		sidebar.setListView(listView);
-		contactList = new ArrayList<EaseUser>();
+		contactList = new ArrayList<UserAvatar>();
 		// get contactlist
 		getContactList();
 		// set adapter
@@ -66,7 +67,7 @@ public class PickContactNoCheckboxActivity extends BaseActivity {
 
 	protected void onListItemClick(int position) {
 		setResult(RESULT_OK, new Intent().putExtra("username", contactAdapter.getItem(position)
-				.getUsername()));
+				.getMUserName()));
 		finish();
 	}
 
@@ -76,18 +77,18 @@ public class PickContactNoCheckboxActivity extends BaseActivity {
 
 	private void getContactList() {
 		contactList.clear();
-		Map<String, EaseUser> users = SuperWeChatHelper.getInstance().getContactList();
-		for (Entry<String, EaseUser> entry : users.entrySet()) {
+		Map<String, UserAvatar> users = SuperWeChatHelper.getInstance().getAppContactList();
+		for (Entry<String, UserAvatar> entry : users.entrySet()) {
 			if (!entry.getKey().equals(Constant.NEW_FRIENDS_USERNAME) && !entry.getKey().equals(Constant.GROUP_USERNAME) && !entry.getKey().equals(Constant.CHAT_ROOM) && !entry.getKey().equals(Constant.CHAT_ROBOT))
 				contactList.add(entry.getValue());
 		}
 		// sort
-        Collections.sort(contactList, new Comparator<EaseUser>() {
+        Collections.sort(contactList, new Comparator<UserAvatar>() {
 
             @Override
-            public int compare(EaseUser lhs, EaseUser rhs) {
+            public int compare(UserAvatar lhs, UserAvatar rhs) {
                 if(lhs.getInitialLetter().equals(rhs.getInitialLetter())){
-                    return lhs.getNick().compareTo(rhs.getNick());
+                    return lhs.getMUserNick().compareTo(rhs.getMUserNick());
                 }else{
                     if("#".equals(lhs.getInitialLetter())){
                         return 1;
