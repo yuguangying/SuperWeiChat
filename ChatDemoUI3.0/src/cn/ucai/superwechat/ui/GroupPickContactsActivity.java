@@ -33,10 +33,6 @@ import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.R;
 import com.hyphenate.easeui.adapter.EaseContactAdapter;
-<<<<<<< HEAD
-import com.hyphenate.easeui.domain.EaseUser;
-=======
->>>>>>> d9c562d3812813002a2f581b0209c33509ca93b2
 import com.hyphenate.easeui.domain.UserAvatar;
 import com.hyphenate.easeui.widget.EaseSidebar;
 

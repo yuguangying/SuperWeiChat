@@ -57,10 +57,6 @@ import java.util.Map.Entry;
 public class EaseContactListFragment extends EaseBaseFragment {
     private static final String TAG = "EaseContactListFragment";
     protected List<UserAvatar> contactList;
-<<<<<<< HEAD
-
-=======
->>>>>>> d9c562d3812813002a2f581b0209c33509ca93b2
     protected ListView listView;
     protected boolean hidden;
     protected ImageButton clearSearch;
@@ -71,11 +67,6 @@ public class EaseContactListFragment extends EaseBaseFragment {
     protected EaseContactList contactListLayout;
     protected boolean isConflict;
     protected FrameLayout contentContainer;
-<<<<<<< HEAD
-    
-=======
-
->>>>>>> d9c562d3812813002a2f581b0209c33509ca93b2
     private Map<String, UserAvatar> contactsMap;
 
     
@@ -220,6 +211,8 @@ public class EaseContactListFragment extends EaseBaseFragment {
     public void refresh() {
         getContactList();
         contactListLayout.refresh();
+        query.getText().clear();
+        hideSoftKeyboard();
     }
     
 

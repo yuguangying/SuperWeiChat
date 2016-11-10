@@ -254,19 +254,13 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
 
     @Override
     public void onAvatarClick(String username) {
-<<<<<<< HEAD
         //handling when user click avatar
-=======
 //        //handling when user click avatar
->>>>>>> d9c562d3812813002a2f581b0209c33509ca93b2
 //        Intent intent = new Intent(getActivity(), UserProfileActivity.class);
 //        intent.putExtra("username", username);
 //        startActivity(intent);
         MGFT.gotoFindProfile(getActivity(),SuperWeChatHelper.getInstance().getAppContactList().get(username));
-<<<<<<< HEAD
-=======
 
->>>>>>> d9c562d3812813002a2f581b0209c33509ca93b2
     }
     
     @Override

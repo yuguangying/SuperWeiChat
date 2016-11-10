@@ -15,10 +15,6 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMGroup;
 import cn.ucai.superwechat.R;
 import com.hyphenate.easeui.adapter.EaseContactAdapter;
-<<<<<<< HEAD
-import com.hyphenate.easeui.domain.EaseUser;
-=======
->>>>>>> d9c562d3812813002a2f581b0209c33509ca93b2
 import com.hyphenate.easeui.domain.UserAvatar;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseSidebar;

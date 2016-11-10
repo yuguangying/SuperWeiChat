@@ -121,8 +121,10 @@ public class ContactListFragment extends EaseContactListFragment {
                 NetUtils.hasDataConnection(getActivity());
             }
         });
-        titleBar.setVisibility(View.GONE);
+        //titleBar.setVisibility(View.GONE);
+        hideTitleBar();
         //设置联系人数据
+
         Map<String, UserAvatar> m = SuperWeChatHelper.getInstance().getAppContactList();
         if (m instanceof Hashtable<?, ?>) {
             m = (Map<String, UserAvatar>) ((Hashtable<String, UserAvatar>)m).clone();
