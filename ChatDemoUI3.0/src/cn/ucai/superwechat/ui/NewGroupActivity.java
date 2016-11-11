@@ -209,6 +209,8 @@ public class NewGroupActivity extends BaseActivity {
 
         @Override
         public void onError(String error) {
+
+            progressDialog.dismiss();
             L.e("errorGroup", "newGroup : " + error);
         }
     };
@@ -236,6 +238,7 @@ public class NewGroupActivity extends BaseActivity {
                 if (result.isRetMsg()){
                     CommonUtils.showLongToast("添加成功");
                     L.e("addmember","newgroup : "+result.getRetData().toString());
+                    progressDialog.dismiss();
                 }else {
                     progressDialog.dismiss();
                     CommonUtils.showLongToast("添加失败");
@@ -244,6 +247,8 @@ public class NewGroupActivity extends BaseActivity {
 
             @Override
             public void onError(String error) {
+
+                progressDialog.dismiss();
                 L.e("errorGroup", "newGroup : " + error);
             }
         });

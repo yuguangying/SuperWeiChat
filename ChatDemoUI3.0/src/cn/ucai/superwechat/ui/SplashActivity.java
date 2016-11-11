@@ -3,16 +3,28 @@ package cn.ucai.superwechat.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.animation.AlphaAnimation;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.domain.UserAvatar;
+import com.hyphenate.easeui.utils.EaseCommonUtils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.bean.Resultbean;
 import cn.ucai.superwechat.db.UserDao;
+import cn.ucai.superwechat.net.Dao;
+import cn.ucai.superwechat.utils.CommonUtils;
+import cn.ucai.superwechat.utils.L;
+import cn.ucai.superwechat.utils.OkHttpUtils;
 
 /**
  * 开屏页
@@ -47,12 +59,13 @@ public class SplashActivity extends BaseActivity {
 					long start = System.currentTimeMillis();
 					EMClient.getInstance().groupManager().loadAllGroups();
 					EMClient.getInstance().chatManager().loadAllConversations();
-					long costTime = System.currentTimeMillis() - start;
 
 					//再次将用户信息保存到内存
 					UserDao ud = new UserDao(context);
 					user = ud.getUser(EMClient.getInstance().getCurrentUser());
 					SuperWeChatHelper.getInstance().setUserAvatar(user);
+					ContactAllList();
+					long costTime = System.currentTimeMillis() - start;
 
 					//wait
 					if (sleepTime - costTime > 0) {
@@ -75,9 +88,39 @@ public class SplashActivity extends BaseActivity {
 				}
 			}
 		}).start();
-
 	}
-	
+
+	private void ContactAllList() {
+		Dao.downloadContactAllList(context, new OkHttpUtils.OnCompleteListener<Resultbean>() {
+            @Override
+            public void onSuccess(Resultbean result) {
+                if (result.isRetMsg()) {
+                    String json = result.getRetData().toString().trim();
+                    Gson gson = new Gson();
+                    UserAvatar[] users = gson.fromJson(json, UserAvatar[].class);
+                    Map<String, UserAvatar> userList = new HashMap<String, UserAvatar>();
+                    for (UserAvatar user : users) {
+                        EaseCommonUtils.setAppUserInitialLetter(user);
+                        userList.put(user.getMUserName(), user);
+                    }
+                    SuperWeChatHelper.getInstance().setAppContactList(userList);
+                    // save the contact list to database
+                    UserDao dao = new UserDao(context);
+                    ArrayList<UserAvatar> list = new ArrayList<UserAvatar>(userList.values());
+                    L.e("list","SuperHelper : "+list);
+                    dao.saveAppContactList(list);
+                    SuperWeChatHelper.getInstance().notifyContactsSyncListener(true);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                CommonUtils.showLongToast(error);
+                Log.i("list", "onError: splash : " + error);
+            }
+        });
+	}
+
 	/**
 	 * get sdk version
 	 */

@@ -19,6 +19,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
+import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.utils.MGFT;
 
 public class FindDetailed extends AppCompatActivity {
@@ -43,6 +44,7 @@ public class FindDetailed extends AppCompatActivity {
         setContentView(R.layout.activity_find_detailed);
         ButterKnife.inject(this);
         user = (UserAvatar) getIntent().getSerializableExtra("name");
+        L.e("user","finDetailed : "+user);
         if (user != null) {
             if (!SuperWeChatHelper.getInstance().getAppContactList().containsKey(user.getMUserName())) {
                 findAdd.setVisibility(View.VISIBLE);
