@@ -637,10 +637,10 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 							deleteMembersFromGroup(username);
 						} else {
 							// 正常情况下点击user，可以进入用户详情或者聊天页面等等
-							// startActivity(new
-							// Intent(GroupDetailsActivity.this,
-							// ChatActivity.class).putExtra("userId",
-							// user.getUsername()));
+							 startActivity(new
+							 Intent(GroupDetailsActivity.this,
+							 ChatActivity.class).putExtra("userId",
+							 username));
 
 						}
 					}
