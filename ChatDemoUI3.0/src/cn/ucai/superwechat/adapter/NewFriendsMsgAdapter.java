@@ -99,6 +99,8 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
             if (msg.getGroupId() != null) { // show group name
                 holder.groupContainer.setVisibility(View.VISIBLE);
                 holder.groupname.setText(msg.getGroupName());
+                //群头像
+                EaseUserUtils.setAppGroupAvatar(context,msg.getGroupId(),holder.avator);
             } else {
                 holder.groupContainer.setVisibility(View.GONE);
             }

@@ -50,7 +50,7 @@ public class EaseConversationAdapter extends ArrayAdapter<EMConversation> {
     protected int primarySize;
     protected int secondarySize;
     protected float timeSize;
-
+    EMGroup group;
     public EaseConversationAdapter(Context context, int resource,
                                    List<EMConversation> objects) {
         super(context, resource, objects);
@@ -101,7 +101,7 @@ public class EaseConversationAdapter extends ArrayAdapter<EMConversation> {
         EMConversation conversation = getItem(position);
         // get username or group id
         String username = conversation.getUserName();
-        
+
         if (conversation.getType() == EMConversationType.GroupChat) {
             String groupId = conversation.getUserName();
             if(EaseAtMessageHelper.get().hasAtMeMsg(groupId)){
@@ -110,14 +110,17 @@ public class EaseConversationAdapter extends ArrayAdapter<EMConversation> {
                 holder.motioned.setVisibility(View.GONE);
             }
             // group message, show group avatar
-            holder.avatar.setImageResource(R.drawable.ease_group_icon);
-            EMGroup group = EMClient.getInstance().groupManager().getGroup(username);
+            //holder.avatar.setImageResource(R.drawable.ease_group_icon);
+            group = EMClient.getInstance().groupManager().getGroup(username);
             holder.name.setText(group != null ? group.getGroupName() : username);
+            //群头像
+            EaseUserUtils.setAppGroupAvatar(getContext(),group.getGroupId(),holder.avatar);
         } else if(conversation.getType() == EMConversationType.ChatRoom){
-            holder.avatar.setImageResource(R.drawable.ease_group_icon);
+            //holder.avatar.setImageResource(R.drawable.ease_group_icon);
             EMChatRoom room = EMClient.getInstance().chatroomManager().getChatRoom(username);
             holder.name.setText(room != null && !TextUtils.isEmpty(room.getName()) ? room.getName() : username);
             holder.motioned.setVisibility(View.GONE);
+            EaseUserUtils.setAppGroupAvatar(getContext(),group.getGroupId(),holder.avatar);
         }else {
             EaseUserUtils.setAppUserAvatar(getContext(), username, holder.avatar);
             EaseUserUtils.setAppUserNick(username, holder.name);

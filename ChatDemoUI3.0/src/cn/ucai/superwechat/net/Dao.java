@@ -1,6 +1,7 @@
 package cn.ucai.superwechat.net;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMGroup;
@@ -8,7 +9,9 @@ import com.hyphenate.chat.EMGroup;
 import java.io.File;
 
 import cn.ucai.superwechat.I;
+import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.bean.Resultbean;
+import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.utils.OkHttpUtils;
 
 /**
@@ -126,7 +129,24 @@ public class Dao {
                 .addParam(I.Group.IS_PUBLIC,String.valueOf(emGroup.isPublic()))
                 .addParam(I.Group.ALLOW_INVITES,String.valueOf(emGroup.isAllowInvites()))
                 .targetClass(Resultbean.class)
-                .post()
+
+                .onPostExecute(listener);
+    }
+    //http://101.251.196.90:8000/SuperWeChatServerV2.0/addGroupMembers?m_member_user_name=a&m_member_group_hxid=a
+    public static void addGroupMembers(Context context, EMGroup emGroup , OkHttpUtils.OnCompleteListener<Resultbean> listener){
+        String memberArr = "";
+        for (String m:emGroup.getMembers()){
+            if (!m.equals(SuperWeChatHelper.getInstance().getCurrentUsernName())){
+                memberArr += m+",";
+            }
+        }
+        memberArr = memberArr.substring(0,memberArr.length()-1);
+        L.e("addGroupMembers","memberarr  Dao : "+memberArr);
+        OkHttpUtils<Resultbean> utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_ADD_GROUP_MEMBERS)
+                .addParam(I.Member.GROUP_HX_ID,emGroup.getGroupId())
+                .addParam(I.Member.USER_NAME,memberArr)
+                .targetClass(Resultbean.class)
                 .execute(listener);
     }
 }

@@ -137,7 +137,7 @@ public class GroupAvatar implements Serializable{
 	}
 	
 	public String getMAvatarSuffix() {
-		return mavatarSuffix;
+		return mavatarSuffix == null?".jpg":mavatarSuffix;
 	}
 	public void setMAvatarSuffix(String mavatarSuffix) {
 		this.mavatarSuffix = mavatarSuffix;
@@ -153,5 +153,10 @@ public class GroupAvatar implements Serializable{
 				+ ", mgroupMaxUsers=" + mgroupMaxUsers + ", mgroupAffiliationsCount=" + mgroupAffiliationsCount
 				+ ", mgroupIsPublic=" + mgroupIsPublic + ", mgroupAllowInvites=" + mgroupAllowInvites + "]";
 	}
-	
+	//http://101.251.196.90:8000/SuperWeChatServerV2.0/downloadAvatar?
+	// name_or_hxid=1478828462658&avatarType=group_icon&m_avatar_suffix=.jpg
+	public String getAvatar(String  hxid) {
+		String path = "http://101.251.196.90:8000/SuperWeChatServerV2.0/downloadAvatar?name_or_hxid="+hxid+"&avatarType=group_icon&m_avatar_suffix=.jpg";
+		return path;
+	}
 }

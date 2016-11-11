@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2016 Hyphenate Inc. All rights reserved.
- * <p/>
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,6 +18,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.ImageFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -70,6 +71,7 @@ public class NewGroupActivity extends BaseActivity {
     private TextView secondTextView;
     private ImageView groupsAvatar;
     File avatarFile = null;
+    EMGroup emGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,10 +175,10 @@ public class NewGroupActivity extends BaseActivity {
                     } else {
                         option.style = memberCheckbox.isChecked() ? EMGroupStyle.EMGroupStylePrivateMemberCanInvite : EMGroupStyle.EMGroupStylePrivateOnlyOwnerInvite;
                     }
-                    EMGroup emGroup = EMClient.getInstance().groupManager().createGroup(groupName, desc, members, reason, option);
+                    emGroup = EMClient.getInstance().groupManager().createGroup(groupName, desc, members, reason, option);
                     String groupId = emGroup.getGroupId();
                     L.e("groupId", "newGroup : " + groupId);
-                    createGroup(emGroup);
+                    createGroup();
                     createGroupSuccess();
                 } catch (final HyphenateException e) {
                     runOnUiThread(new Runnable() {
@@ -191,33 +193,25 @@ public class NewGroupActivity extends BaseActivity {
         }).start();
     }
 
-    private void createGroup(EMGroup emGroup) {
+    private void createGroup() {
         if (avatarFile == null) {
-            Dao.createGroup(this, emGroup, new OkHttpUtils.OnCompleteListener<Resultbean>() {
-                @Override
-                public void onSuccess(Resultbean result) {
-                    resultHandle(result);
-                }
-
-                @Override
-                public void onError(String error) {
-                    L.e("error", "newGroup : " + error);
-                }
-            });
+            Dao.createGroup(this, emGroup, listener);
         } else {
-            Dao.createGroup(this, emGroup, new OkHttpUtils.OnCompleteListener<Resultbean>() {
-                @Override
-                public void onSuccess(Resultbean result) {
-                    resultHandle(result);
-                }
-
-                @Override
-                public void onError(String error) {
-                    L.e("error", "newGroup : " + error);
-                }
-            });
+            Dao.createGroup(this, emGroup, avatarFile, listener);
         }
     }
+
+    OkHttpUtils.OnCompleteListener listener = new OkHttpUtils.OnCompleteListener<Resultbean>() {
+        @Override
+        public void onSuccess(Resultbean result) {
+            resultHandle(result);
+        }
+
+        @Override
+        public void onError(String error) {
+            L.e("errorGroup", "newGroup : " + error);
+        }
+    };
 
     private void resultHandle(Resultbean result) {
         if (result.isRetMsg()) {
@@ -225,8 +219,34 @@ public class NewGroupActivity extends BaseActivity {
             Gson gson = new Gson();
             GroupAvatar groupAvatar = gson.fromJson(json, GroupAvatar.class);
             L.e("groupAvatar", "newGroup : " + groupAvatar);
+            if (emGroup.getMembers() != null && emGroup.getMembers().size() > 1) {
+                addMembers();
+            }
+            createGroupSuccess();
+        }else {
+            progressDialog.dismiss();
+            CommonUtils.showLongToast("success");
         }
-        createGroupSuccess();
+    }
+
+    private void addMembers() {
+        Dao.addGroupMembers(this, emGroup, new OkHttpUtils.OnCompleteListener<Resultbean>() {
+            @Override
+            public void onSuccess(Resultbean result) {
+                if (result.isRetMsg()){
+                    CommonUtils.showLongToast("添加成功");
+                    L.e("addmember","newgroup : "+result.getRetData().toString());
+                }else {
+                    progressDialog.dismiss();
+                    CommonUtils.showLongToast("添加失败");
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                L.e("errorGroup", "newGroup : " + error);
+            }
+        });
     }
 
     private void createGroupSuccess() {
@@ -271,6 +291,10 @@ public class NewGroupActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 图片file
+     * @param picdata
+     */
     public void savebitmapFile(Intent picdata) {
         Bundle extras = picdata.getExtras();
         if (extras != null) {
@@ -288,6 +312,7 @@ public class NewGroupActivity extends BaseActivity {
             avatarFile = file;
         }
     }
+
     private void uploadHeadPhoto() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.dl_title_upload_photo);

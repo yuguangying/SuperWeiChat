@@ -12,6 +12,7 @@ import com.hyphenate.easeui.R;
 import com.hyphenate.easeui.controller.EaseUI;
 import com.hyphenate.easeui.controller.EaseUI.EaseUserProfileProvider;
 import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.GroupAvatar;
 import com.hyphenate.easeui.domain.UserAvatar;
 
 public class EaseUserUtils {
@@ -102,7 +103,28 @@ public class EaseUserUtils {
             Glide.with(context).load(R.drawable.ease_default_avatar).into(imageView);
         }
     }
-
+    /**
+     * set app group avatar
+     *
+     * @param hxid
+     */
+    public static void setAppGroupAvatar(Context context, String hxid, ImageView imageView) {
+        GroupAvatar groupAvatar = new GroupAvatar();
+        if (groupAvatar != null && groupAvatar.getAvatar(hxid) != null) {
+            try {
+                int avatarResId = Integer.parseInt(groupAvatar.getAvatar(hxid));
+                Glide.with(context).load(avatarResId).into(imageView);
+            } catch (Exception e) {
+                //use default avatar
+                Log.i("avatar", "setAppUserAvatar: use default avatar");
+                Log.i("avatar", "setAppUserAvatar: Exception "+e.toString());
+                Glide.with(context).load(groupAvatar.getAvatar(hxid)).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.ease_default_avatar).into(imageView);
+            }
+        } else {
+            Log.i("avatar", "user==null: use default avatar");
+            Glide.with(context).load(R.drawable.ease_default_avatar).into(imageView);
+        }
+    }
     /**
      * set app user's nickname
      */
