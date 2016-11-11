@@ -32,11 +32,21 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.hyphenate.chat.EMChatRoom;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMConversation.EMConversationType;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.SuperWeChatHelper;
+import cn.ucai.superwechat.bean.Resultbean;
+import cn.ucai.superwechat.net.Dao;
+import cn.ucai.superwechat.utils.CommonUtils;
+import cn.ucai.superwechat.utils.L;
+import cn.ucai.superwechat.utils.MGFT;
+import cn.ucai.superwechat.utils.OkHttpUtils;
+
+import com.hyphenate.easeui.domain.UserAvatar;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseAlertDialog;
 import com.hyphenate.easeui.widget.EaseAlertDialog.AlertDialogUser;
@@ -190,7 +200,7 @@ public class ChatRoomDetailsActivity extends BaseActivity implements OnClickList
 	/**
 	 * exit group
 	 * 
-	 * @param groupId
+	 * @param
 	 */
 	private void exitGroup() {
 		new Thread(new Runnable() {
@@ -313,8 +323,9 @@ public class ChatRoomDetailsActivity extends BaseActivity implements OnClickList
 			final LinearLayout button = (LinearLayout) convertView.findViewById(R.id.button_avatar);
 			// group member item
 			final String username = getItem(position);
+			//setAvatar(holder, username);
+			EaseUserUtils.setAppUserAvatar(getContext(), username, holder.imageView);
 			holder.textView.setText(username);
-			EaseUserUtils.setUserAvatar(getContext(), username, holder.imageView);
 			button.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -324,6 +335,7 @@ public class ChatRoomDetailsActivity extends BaseActivity implements OnClickList
 
 			return convertView;
 		}
+
 
 		@Override
 		public int getCount() {
